@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+- '10'
+before_install:
+- npm install -g @angular/cli
+install: npm install
+branches:
+  only:
+  - master
+deploy:
+  provider: heroku
+  app: aht-ng-app
+  api_key:
+    secure: Ng4iqypSFPsJ+fyAE3lGnq4oanh3XATUBUVLaOeI2h11cVys6lSyftd2qNbLCx6YHIw3PjiwbbJsuw7QvY5bxNmEFRJgWTwitPY2Xr886kU+8njbgxB3VOaSQCUJTYy+OqTKAed0ShkSisB342WrVqkLG8qu1FyxI+sFT+Y28vQmPDh0nWht/80ZkX/0VPYh+KTozpul2iYMPWxwlTEQfGFiYiCtLPN8IAFXdHN0dNmb5QEoENJEEfG6WwV89V73Hmbpy+yqH/uY5CKiUWksMPx50z4N9DCFSIBynwjfpALOkx0OY5Os6V7EeP9m7cUNw84zLzs2hfpQIWs5/nn3JG3bGoslxgvTf94qtzlxFBXGapzYZoYx5LpV5lAo5IdG/64DjxdK5WoCTyAY518gQqKyBX4HZ0oSbTHJGkxyp4uCZ4G81xut2qlGutFHy6P0x/AchZYo/gr60OI1HWZ5RP2CsvKugap6H3ilGblHVPwKvpbZrroYb5rRfpnITuJJ9JrG3a7RU7fZuMH7XQ9+R6JVsLIX0wm5Bx8PUl12P9I3FpqS/g/nA+0NVAW+zCJ7jfhNtRSmjh+GyR38pclukaxMIf8UzroSVcw5j9/MbEVr5/bUkaVDs53eEQ13sSA9pTmjJqMacs6G6TqG4xUvUJ4nBlt+Qztr6xh4F0PWeb8=
