@@ -1,0 +1,16 @@
+<nav class="navbar-container">
+  <ul ngbNav [activeId]="route.fragment | async" class="container">
+    <li ngbNavItem="games">
+      <a ngbNavLink routerLink="/games">Games</a>
+    </li>
+    <li ngbNavItem="friends">
+      <a ngbNavLink routerLink="/friends">Friends</a>
+    </li>
+    <li ngbNavItem="profile">
+      <a ngbNavLink routerLink="/users/me">Profile</a>
+    </li>
+    <li ngbNavItem="sign-in" class="ml-auto">
+      <a ngbNavLink routerLink="/sign-in">Sign in</a>
+    </li>
+  </ul>
+</nav>
