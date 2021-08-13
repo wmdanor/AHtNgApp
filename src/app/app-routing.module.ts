@@ -1,7 +1,32 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import {NotFoundComponent} from "@core/components/not-found/not-found.component";
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'games',
+    pathMatch: 'full'
+  },
+  {
+    path: 'sign-in',
+    loadChildren: () => import('./features/sign-in/sign-in.module').then(m => m.SignInModule)
+  },
+  {
+    path: 'games',
+    loadChildren: () => import('./features/games/games.module').then(m => m.GamesModule)
+  },
+  {
+    path: 'friends',
+    loadChildren: () => import('./features/friends/friends.module').then(m => m.FriendsModule)
+  },
+  {
+    path: 'users',
+    loadChildren: () => import('./features/users/users.module').then(m => m.UsersModule)
+  },
+  {path: '404', component: NotFoundComponent},
+  {path: '**', redirectTo: '/404'}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
