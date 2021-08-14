@@ -11,13 +11,13 @@ import {GamesService} from "@/features/games/services/games.service";
 @Injectable({
   providedIn: 'root'
 })
-export class GameResolver implements Resolve<Game | null> {
+export class GameResolver implements Resolve<Game | undefined> {
   constructor(
     private readonly gamesService: GamesService
   ) {
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Game | null> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Game | undefined> {
     const id = Number(route.params.id);
     return this.gamesService.getGame$(id);
   }

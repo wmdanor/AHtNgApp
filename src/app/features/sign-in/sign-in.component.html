@@ -1,1 +1,44 @@
-<p>sign-in works!</p>
+<div class="container d-flex flex-column align-items-center form-wrapper">
+  <h2>Sign in</h2>
+  <form *ngIf="signInForm" [formGroup]="signInForm" class="d-flex flex-column form">
+    <label>
+      <span>Email:</span>
+      <input
+        [class.is-valid]="emailValid"
+        [class.is-invalid]="emailInvalid"
+        required formControlName="email" type="email" class="form-control mt-1" placeholder="Email">
+      <span *ngIf="emailInvalid">
+        <small class="text-danger"
+               *ngIf="email?.hasError('required')">
+          This field is required.
+        </small>
+        <small class="text-danger"
+               *ngIf="email?.hasError('email')">
+          Email is invalid.
+        </small>
+      </span>
+    </label>
+    <label>
+      <span>Password:</span>
+      <input
+        [class.is-valid]="passwordValid"
+        [class.is-invalid]="passwordInvalid"
+        required minlength="8" maxlength="16" formControlName="password" type="password" class="form-control mt-1" placeholder="Password">
+      <span *ngIf="passwordInvalid">
+        <small class="text-danger"
+               *ngIf="password?.hasError('required')">
+          This field is required.
+        </small>
+        <small class="text-danger"
+               *ngIf="password?.hasError('minlength')">
+          The minimum length for this field is {{password?.errors?.minlength?.requiredLength}} characters.
+        </small>
+        <small class="text-danger"
+               *ngIf="password?.hasError('maxlength')">
+          The maximum length for this field is {{password?.errors?.maxlength?.requiredLength}} characters.
+        </small>
+      </span>
+    </label>
+    <button type="submit" class="btn btn-primary mt-1" [disabled]="signInForm.invalid">Sign in</button>
+  </form>
+</div>

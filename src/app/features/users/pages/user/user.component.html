@@ -1,1 +1,16 @@
-<p>user works!</p>
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-sm-3 d-flex justify-content-center justify-content-sm-start">
+      <img src="/assets/images/omegalul.png" alt="Omegalul meme">
+    </div>
+    <div class="col-12 col-sm-3 offset-sm-6">
+      <div *ngIf="user" class="d-flex flex-column align-items-center align-items-sm-end">
+        <span>{{user.username}}</span>
+        <span>{{user.email}}</span>
+        <span>{{user.age}}</span>
+<!--    TODO: make *ngIf check if it is logged user page    -->
+        <a *ngIf="true" routerLink="./edit" class="btn btn-primary">Edit profile</a>
+      </div>
+    </div>
+  </div>
+</div>
