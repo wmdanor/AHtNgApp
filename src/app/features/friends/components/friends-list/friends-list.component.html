@@ -1,0 +1,45 @@
+<div>
+  <ul ngbNav [activeId]="activeId" #nav="ngbNav" class="nav-tabs" (navChange)="tabChanged($event)">
+    <ng-container *ngIf="searchQuery else other_pages">
+      <li [ngbNavItem]="4">
+        <a ngbNavLink>Search</a>
+      </li>
+    </ng-container>
+
+    <ng-template #other_pages>
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>Friends</a>
+      </li>
+      <li [ngbNavItem]="2">
+        <a ngbNavLink>Sent requests</a>
+      </li>
+      <li [ngbNavItem]="3">
+        <a ngbNavLink>Received requests</a>
+      </li>
+    </ng-template>
+  </ul>
+
+  <ng-container *ngIf="friends.length else list_empty">
+    <div class="my-3" *ngFor="let friend of friends">
+      <app-friend-list-item
+        [friend]="friend"
+        (friendChange)="changeFriendStatus($event)"
+      >
+      </app-friend-list-item>
+    </div>
+
+    <ngb-pagination
+      [(page)]="page"
+      [pageSize]="10"
+      [collectionSize]="friends.length"></ngb-pagination>
+  </ng-container>
+
+  <ng-template #list_empty>
+    <div class="shadow my-3 p-3 d-flex align-items-center justify-content-center">
+      <span>Nobody here but us chickens!</span>
+    </div>
+  </ng-template>
+
+</div>
+
+

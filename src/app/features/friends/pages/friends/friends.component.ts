@@ -6,10 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./friends.component.scss']
 })
 export class FriendsComponent implements OnInit {
+  public query: string = '';
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  queryChanged(newQuery: string) {
+    this.query = newQuery;
+  }
 }

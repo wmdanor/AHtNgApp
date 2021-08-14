@@ -4,6 +4,7 @@ import { UserComponent } from './pages/user/user.component';
 import {UsersRoutingModule} from "@/features/users/users-routing.module";
 import { EditComponent } from './pages/edit/edit.component';
 import {ReactiveFormsModule} from "@angular/forms";
+import {CoreModule} from "@core/core.module";
 
 
 
@@ -14,6 +15,7 @@ import {ReactiveFormsModule} from "@angular/forms";
   ],
   imports: [
     CommonModule,
+    CoreModule,
     UsersRoutingModule,
     ReactiveFormsModule
   ]
