@@ -16,7 +16,7 @@ export class GamesService {
     return of([]);
   }
 
-  public getGame$(id: number): Observable<Game | null> {
-    return of(null);
+  public getGame$(id: number): Observable<Game | undefined> {
+    return of(undefined);
   }
 }

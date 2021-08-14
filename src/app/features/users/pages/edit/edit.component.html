@@ -1,0 +1,54 @@
+<div class="container d-flex flex-column align-items-center form-wrapper">
+  <h2>Profile</h2>
+  <form *ngIf="editForm" [formGroup]="editForm" class="d-flex flex-column form">
+    <label>
+      <span>Username:</span>
+      <input
+        [class.is-invalid]="usernameInvalid"
+        required formControlName="username" type="text" class="form-control mt-1" placeholder="Username">
+      <span *ngIf="usernameInvalid">
+        <small class="text-danger"
+               *ngIf="username?.hasError('required')">
+          This field is required.
+        </small>
+        <small class="text-danger"
+               *ngIf="username?.hasError('minlength')">
+          The minimum length for this field is {{username?.errors?.minlength?.requiredLength}} characters.
+        </small>
+        <small class="text-danger"
+               *ngIf="username?.hasError('maxlength')">
+          The maximum length for this field is {{username?.errors?.maxlength?.requiredLength}} characters.
+        </small>
+      </span>
+    </label>
+    <label>
+      <span>Email:</span>
+      <input
+        [class.is-invalid]="emailInvalid"
+        required formControlName="email" type="email" class="form-control mt-1" placeholder="Email">
+      <span *ngIf="emailInvalid">
+        <small class="text-danger"
+               *ngIf="email?.hasError('required')">
+          This field is required.
+        </small>
+        <small class="text-danger"
+               *ngIf="email?.hasError('email')">
+          Email is invalid.
+        </small>
+      </span>
+    </label>
+    <label>
+      <span>Age:</span>
+      <input
+        [class.is-invalid]="ageInvalid"
+        formControlName="age" type="number" class="form-control mt-1" placeholder="Age">
+      <span *ngIf="ageInvalid">
+        <small class="text-danger"
+               *ngIf="age?.hasError('min')">
+          The minimum value for this field is {{age?.errors?.min.min}}.
+        </small>
+      </span>
+    </label>
+    <button type="submit" class="btn btn-primary mt-1" [disabled]="editForm.invalid">Sign in</button>
+  </form>
+</div>

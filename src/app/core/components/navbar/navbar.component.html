@@ -3,14 +3,22 @@
     <li ngbNavItem="games">
       <a ngbNavLink routerLink="/games">Games</a>
     </li>
-    <li ngbNavItem="friends">
-      <a ngbNavLink routerLink="/friends">Friends</a>
-    </li>
-    <li ngbNavItem="profile">
-      <a ngbNavLink routerLink="/users/me">Profile</a>
-    </li>
-    <li ngbNavItem="sign-in" class="ml-auto">
+
+    <ng-container *ngIf="loggedUserId">
+      <li ngbNavItem="friends">
+        <a ngbNavLink routerLink="/friends">Friends</a>
+      </li>
+      <li ngbNavItem="profile" class="ml-auto">
+        <a ngbNavLink [routerLink]="'/users/' + loggedUserId">Profile</a>
+      </li>
+    </ng-container>
+
+    <li *ngIf="!loggedUserId" ngbNavItem="sign-in" class="ml-auto">
       <a ngbNavLink routerLink="/sign-in">Sign in</a>
     </li>
   </ul>
+  <label>
+    Is logged in:
+    <input type="checkbox" checked (change)="toggleLoginState($event)">
+  </label>
 </nav>
