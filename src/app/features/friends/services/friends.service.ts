@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Observable, of} from "rxjs";
-import {Friend, FriendStatus} from "@/features/friends/models";
+import {Friend, FriendsPage, FriendStatus} from "@/features/friends/models";
+import {Pagination} from "@core/models/pagination";
 
 @Injectable({
   providedIn: 'root'
@@ -19,55 +20,71 @@ export class FriendsService {
   }
 
   // TODO: implement normally
-  public getFriends$(): Observable<Friend[]> {
-    return of([
-      {
-        user: {
-          id: 1,
-          username: 'example1',
-          email: 'example@mail.com',
-        },
-        status: FriendStatus.Friends,
-      }
-    ]);
+  public getFriends$(pagination: Pagination): Observable<FriendsPage> {
+    return of({
+      ...pagination,
+      count: 1,
+      friends: [
+        {
+          user: {
+            id: 1,
+            username: 'example1',
+            email: 'example@mail.com',
+          },
+          status: FriendStatus.Friends,
+        }
+      ]
+    });
   }
 
-  public getSentRequests$(): Observable<Friend[]> {
-    return of([
-      {
-        user: {
-          id: 2,
-          username: 'example2',
-          email: 'example@mail.com',
-        },
-        status: FriendStatus.SentRequest,
-      }
-    ]);
+  public getSentRequests$(pagination: Pagination): Observable<FriendsPage> {
+    return of({
+      ...pagination,
+      count: 2,
+      friends: [
+        {
+          user: {
+            id: 1,
+            username: 'example2',
+            email: 'example@mail.com',
+          },
+          status: FriendStatus.SentRequest,
+        }
+      ]
+    });
   }
 
-  public getReceivedRequests$(): Observable<Friend[]> {
-    return of([
-      {
-        user: {
-          id: 3,
-          username: 'example3',
-          email: 'example@mail.com',
-        },
-        status: FriendStatus.ReceivedRequest,
-      }
-    ]);
+  public getReceivedRequests$(pagination: Pagination): Observable<FriendsPage> {
+    return of({
+      ...pagination,
+      count: 3,
+      friends: [
+        {
+          user: {
+            id: 1,
+            username: 'example3',
+            email: 'example@mail.com',
+          },
+          status: FriendStatus.ReceivedRequest,
+        }
+      ]
+    });
   }
 
-  public findUsers$(query: string): Observable<Friend[]> {
-    return of([
-      {
-        user: {
-          id: 4,
-          username: 'example4',
-          email: 'example@mail.com',
-        },
-        status: FriendStatus.None,
-      }
-    ]);
+  public findUsers$(pagination: Pagination, query: string): Observable<FriendsPage> {
+    return of({
+      ...pagination,
+      count: 4,
+      friends: [
+        {
+          user: {
+            id: 1,
+            username: 'example4',
+            email: 'example@mail.com',
+          },
+          status: FriendStatus.None,
+        }
+      ]
+    });
   }
 }

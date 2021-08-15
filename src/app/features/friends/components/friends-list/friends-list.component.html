@@ -19,20 +19,24 @@
     </ng-template>
   </ul>
 
-  <ng-container *ngIf="friends.length else list_empty">
-    <div class="my-3" *ngFor="let friend of friends">
+  <ng-container *ngIf="pageData.friends.length else list_empty">
+    <div class="my-3" *ngFor="let friend of pageData.friends">
       <app-friend-list-item
         [friend]="friend"
-        (friendChange)="changeFriendStatus($event)"
+        (friendChange)="friendStatusChange($event)"
       >
       </app-friend-list-item>
     </div>
 
     <ngb-pagination
       [(page)]="page"
-      [pageSize]="10"
-      [collectionSize]="friends.length"></ngb-pagination>
+      [pageSize]="pageSize"
+      [collectionSize]="pageData.count"
+      (pageChange)="pageChange()"
+    ></ngb-pagination>
   </ng-container>
+
+  <button (click)="test()">click</button>
 
   <ng-template #list_empty>
     <div class="shadow my-3 p-3 d-flex align-items-center justify-content-center">

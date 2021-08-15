@@ -1,11 +1,11 @@
 <div class="container">
-  <h2 class="mb-2">Friends</h2>
+  <h2 class="mb-3">Friends</h2>
   <div>
-    <h4>Search friends:</h4>
+    <h6 class="mb-2">Search friends:</h6>
     <app-search-bar (query)="queryChanged($event)"></app-search-bar>
   </div>
 </div>
-<div class="container">
-  <h2 class="mb-2">My Friends</h2>
+<div class="container mt-4">
+  <h2 *ngIf="!query" class="mb-3">My Friends</h2>
   <app-friends-list [searchQuery]="query"></app-friends-list>
 </div>
