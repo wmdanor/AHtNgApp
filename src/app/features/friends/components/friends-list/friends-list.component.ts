@@ -1,9 +1,10 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {NgbNavChangeEvent} from "@ng-bootstrap/ng-bootstrap";
-import {Friend, FriendStatus} from "@/features/friends/models";
+import {Friend, FriendsPage, FriendStatus} from "@/features/friends/models";
 import {Observable, Subscription} from "rxjs";
 import {FriendsService} from "@/features/friends/services/friends.service";
+import {Pagination} from "@core/models/pagination";
 
 @Component({
   selector: 'app-friends-list',
@@ -15,18 +16,28 @@ export class FriendsListComponent implements OnInit, OnChanges {
 
   public activeId: number = 0;
   public page = 1;
-  public friends: Friend[] = [];
-  public friends$: Observable<Friend[]> = new Observable<Friend[]>();
+  public pageSize = 10;
+  public pageData: FriendsPage = {offset: 0, limit: 0, count: 0, friends: []};
   private lastSubscription: Subscription = new Subscription();
+
+  private currentUsersGetter:
+    ((pagination: Pagination) => Observable<FriendsPage>) |
+    ((pagination: Pagination, query: string) => Observable<FriendsPage>);
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly friendsService: FriendsService
-  ) { }
+  ) {
+    this.currentUsersGetter = this.friendsService.getFriends$;
+  }
+
+  test() {
+    console.log(this.pageData, this.currentUsersGetter)
+  }
 
   ngOnInit(): void {
     this.activeId = 1;
-    this.getFriends(); // TODO: fetch users
+    this.pageChange(); // TODO: fetch users
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -38,13 +49,9 @@ export class FriendsListComponent implements OnInit, OnChanges {
     this.resetPagination(this.activeId);
   }
 
-  changeFriendStatus(friend: Friend) {
-    const index = this.friends.findIndex((el) => friend.user.id === el.user.id);
-    if (this.activeId === 4) {
-      this.friends[index] = friend;
-    } else {
-      this.friends.splice(index, 1);
-    }
+  friendStatusChange(friend: Friend) {
+    const index = this.pageData.friends.findIndex((el) => friend.user.id === el.user.id);
+    this.pageData.friends[index] = friend;
   }
 
   tabChanged(event: NgbNavChangeEvent) {
@@ -53,41 +60,35 @@ export class FriendsListComponent implements OnInit, OnChanges {
 
   resetPagination(activeId: number) {
     this.lastSubscription.unsubscribe();
-    this.friends = [];
+    this.pageData = {offset: 0, limit: 0, count: 0, friends: []};
     this.page = 1;
     switch (activeId) {
       case 1:
-        this.getFriends();
+        this.currentUsersGetter = this.friendsService.getFriends$;
         break;
       case 2:
-        this.getSentRequests();
+        this.currentUsersGetter = this.friendsService.getSentRequests$;
         break;
       case 3:
-        this.getReceivedRequests();
+        this.currentUsersGetter = this.friendsService.getReceivedRequests$;
         break;
       case 4:
-        this.getSearchedUsers();
+        this.currentUsersGetter = this.friendsService.findUsers$;
         break;
     }
+    this.pageChange();
   }
 
-  getFriends() {
-    this.lastSubscription = this.friendsService.getFriends$()
-      .subscribe((friends => this.friends = friends));
+  pageChange() {
+    this.lastSubscription.unsubscribe();
+    this.lastSubscription = this.currentUsersGetter({
+      offset: this.offset,
+      limit: this.pageSize
+    }, this.searchQuery)
+      .subscribe((friendsPage) => this.pageData = friendsPage);
   }
 
-  getSentRequests() {
-    this.lastSubscription = this.friendsService.getSentRequests$()
-      .subscribe((friends => this.friends = friends));
-  }
-
-  getReceivedRequests() {
-    this.lastSubscription = this.friendsService.getReceivedRequests$()
-      .subscribe((friends => this.friends = friends));
-  }
-
-  getSearchedUsers() {
-    this.lastSubscription = this.friendsService.findUsers$(this.searchQuery)
-      .subscribe((friends => this.friends = friends));
+  private get offset() {
+    return (this.page-1)*this.pageSize;
   }
 }
