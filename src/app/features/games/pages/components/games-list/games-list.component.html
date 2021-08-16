@@ -1,0 +1,21 @@
+<ng-container *ngIf="pageData.games.length else list_empty">
+  <div class="row">
+    <div class="col-4" *ngFor="let game of pageData.games">
+      <app-games-list-item [game]="game" (gameChange)="addToLibrary($event)"></app-games-list-item>
+    </div>
+  </div>
+  <div class="d-flex justify-content-center">
+    <ngb-pagination
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="pageData.count"
+      (pageChange)="reloadList()"
+    ></ngb-pagination>
+  </div>
+</ng-container>
+
+<ng-template #list_empty>
+  <div class="shadow my-3 p-3 d-flex align-items-center justify-content-center">
+    <span>Nobody here but us chickens!</span>
+  </div>
+</ng-template>

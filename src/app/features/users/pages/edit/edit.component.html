@@ -1,4 +1,4 @@
-<div class="container d-flex flex-column align-items-center form-wrapper">
+<div class="container d-flex flex-column align-items-center form-wrapper shadow">
   <h2>Profile</h2>
   <form *ngIf="editForm" [formGroup]="editForm" class="d-flex flex-column form">
     <label>
@@ -49,6 +49,6 @@
         </small>
       </span>
     </label>
-    <button type="submit" class="btn btn-primary mt-1" [disabled]="editForm.invalid">Sign in</button>
+    <button type="submit" class="btn btn-primary mt-1" [disabled]="editForm.invalid">Update</button>
   </form>
 </div>

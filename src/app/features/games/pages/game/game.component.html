@@ -1,1 +1,15 @@
-<p>game works!</p>
+<app-container>
+  <div class="d-flex flex-column align-items-center justify-content-center">
+    <ng-container *ngIf="game">
+      <span class="h3">{{game.name}}</span>
+      <span>{{game.price}}$</span>
+      <div>
+        <span *ngFor="let tag of game.tags; index as i">
+          {{tag}}
+          <ng-container *ngIf="i != game.tags.length - 1"> |</ng-container>
+        </span>
+      </div>
+      <span>{{game.description}}</span>
+    </ng-container>
+  </div>
+</app-container>

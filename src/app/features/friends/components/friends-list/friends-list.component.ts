@@ -31,13 +31,9 @@ export class FriendsListComponent implements OnInit, OnChanges {
     this.currentUsersGetter = this.friendsService.getFriends$;
   }
 
-  test() {
-    console.log(this.pageData, this.currentUsersGetter)
-  }
-
   ngOnInit(): void {
     this.activeId = 1;
-    this.pageChange(); // TODO: fetch users
+    this.reloadList(); // TODO: fetch users
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -59,7 +55,6 @@ export class FriendsListComponent implements OnInit, OnChanges {
   }
 
   resetPagination(activeId: number) {
-    this.lastSubscription.unsubscribe();
     this.pageData = {offset: 0, limit: 0, count: 0, friends: []};
     this.page = 1;
     switch (activeId) {
@@ -76,10 +71,10 @@ export class FriendsListComponent implements OnInit, OnChanges {
         this.currentUsersGetter = this.friendsService.findUsers$;
         break;
     }
-    this.pageChange();
+    this.reloadList();
   }
 
-  pageChange() {
+  reloadList() {
     this.lastSubscription.unsubscribe();
     this.lastSubscription = this.currentUsersGetter({
       offset: this.offset,
