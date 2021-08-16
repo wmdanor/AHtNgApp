@@ -1,9 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {GamesFilter, GamesPage} from "@/features/games/models";
-import {GamesService} from "@/features/games/services/games.service";
-import {Subscription} from "rxjs";
-import {filter} from "rxjs/operators";
+import {Component, OnInit} from '@angular/core';
+import {GamesFilter} from "@core/models/games";
 
 @Component({
   selector: 'app-games',

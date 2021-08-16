@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {Game} from "@/features/games/models";
+import {Game} from "@core/models/games";
 
 @Component({
   selector: 'app-game',

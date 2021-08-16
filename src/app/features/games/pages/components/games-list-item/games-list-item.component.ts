@@ -1,5 +1,6 @@
 import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
-import {FeaturedGame} from "@/features/games/models";
+import {FeaturedGame} from "@core/models/games";
+import {GamesService} from "@/features/games/services/games.service";
 
 @Component({
   selector: 'app-games-list-item',
@@ -12,7 +13,9 @@ export class GamesListItemComponent implements OnInit {
 
   private maxDescriptionLength = 100;
 
-  constructor() { }
+  constructor(
+    private readonly gamesService: GamesService
+  ) { }
 
   ngOnInit(): void {
   }
@@ -27,6 +30,7 @@ export class GamesListItemComponent implements OnInit {
   }
 
   public addToLibrary() {
-    // TODO: add to library
+    this.gamesService.addToLibrary$(this.game.id);
+    this.gameChange.emit({...this.game, isInLibrary: true});
   }
 }

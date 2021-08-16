@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import {FeaturedGame, Game, GamesFilter, GamesPage} from "../models";
+import {FeaturedGame, GamesFilter, GamesPage} from "@core/models/games";
 import {apiBaseUrl} from "@core/constants/api";
 import {Observable, of} from "rxjs";
 import {Pagination} from "@core/models/pagination";
-import {FriendStatus} from "@/features/friends/models";
 
 @Injectable({
   providedIn: 'root'

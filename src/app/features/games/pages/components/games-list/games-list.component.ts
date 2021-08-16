@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FeaturedGame, GamesFilter, GamesPage} from "@/features/games/models";
+import {FeaturedGame, GamesFilter, GamesPage} from "@core/models/games";
 import {Subscription} from "rxjs";
 import {GamesService} from "@/features/games/services/games.service";
 
@@ -39,7 +39,6 @@ export class GamesListComponent implements OnInit {
   }
 
   addToLibrary(game: FeaturedGame) {
-    this.gamesService.addToLibrary$(game.id);
     const index = this.pageData.games.findIndex((el) => el.id == game.id);
     this.pageData.games[index] = game;
   }

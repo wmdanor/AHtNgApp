@@ -2,7 +2,7 @@ import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {ActivatedRoute} from "@angular/router";
 import {capitalizeFirstLetter} from "@core/utils/capitalizeFirstLetter";
-import {FilterComponentData} from "@/features/games/models";
+import {FilterComponentData} from "@core/models/games";
 
 @Component({
   selector: 'app-games-list-filter',

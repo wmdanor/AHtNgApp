@@ -5,7 +5,7 @@ import {
   ActivatedRouteSnapshot
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import {FeaturedGame} from "../models";
+import {FeaturedGame} from "@core/models/games";
 import {GamesService} from "@/features/games/services/games.service";
 
 @Injectable({
