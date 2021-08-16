@@ -1,1 +1,20 @@
-<p>games works!</p>
+<app-container>
+  <div>
+    <h2 class="mb-3">Games</h2>
+    <div>
+      <h6 class="mb-2">Search games:</h6>
+      <app-search-bar placeholder="Search Games" (query)="queryChanged($event)"></app-search-bar>
+    </div>
+  </div>
+  <div class="mt-4">
+    <h2 class="mb-3">Featured Games</h2>
+    <div class="row">
+      <div class="col-9">
+        <app-games-list [filter]="filter"></app-games-list>
+      </div>
+      <div class="col-3 border-left">
+        <app-games-list-filter></app-games-list-filter>
+      </div>
+    </div>
+  </div>
+</app-container>

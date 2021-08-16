@@ -28,15 +28,15 @@
       </app-friend-list-item>
     </div>
 
-    <ngb-pagination
-      [(page)]="page"
-      [pageSize]="pageSize"
-      [collectionSize]="pageData.count"
-      (pageChange)="pageChange()"
-    ></ngb-pagination>
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [(page)]="page"
+        [pageSize]="pageSize"
+        [collectionSize]="pageData.count"
+        (pageChange)="reloadList()"
+      ></ngb-pagination>
+    </div>
   </ng-container>
-
-  <button (click)="test()">click</button>
 
   <ng-template #list_empty>
     <div class="shadow my-3 p-3 d-flex align-items-center justify-content-center">

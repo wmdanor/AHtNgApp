@@ -1,0 +1,23 @@
+<div>
+  <div class="d-flex flex-column align-items-center">
+    <span class="h6 w-100">
+      Filter by price
+    </span>
+    <input style="width: 90%" (change)="priceChange()" [formControl]="priceControl" type="range" min="0" max="13" step="1" value="13">
+    <span>{{priceText}}</span>
+  </div>
+  <div class="d-flex flex-column align-items-center">
+    <span class="h6 w-100">
+      Filter by tag
+    </span>
+    <ul class="list-unstyled">
+      <li *ngFor="let tag of tagsList">
+        <label>
+          <input (change)="tagToggled($event.target)" class="ml-2" type="checkbox" value="{{tag}}">
+          {{capitalizeFirstLetter(tag)}}
+
+        </label>
+      </li>
+    </ul>
+  </div>
+</div>

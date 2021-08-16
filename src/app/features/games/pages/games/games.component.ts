@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {Game} from "@/features/games/models";
+import {Component, OnInit} from '@angular/core';
+import {GamesFilter} from "@core/models/games";
 
 @Component({
   selector: 'app-games',
@@ -8,14 +7,16 @@ import {Game} from "@/features/games/models";
   styleUrls: ['./games.component.scss']
 })
 export class GamesComponent implements OnInit {
-  public game: Game | undefined;
+  public filter: GamesFilter = {name: '', maxPrice: -1, tags: []};
 
   constructor(
-    private readonly activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    this.game = this.activatedRoute.snapshot.data.game;
+
   }
 
+  queryChanged(query: string) {
+    this.filter.name = query;
+  }
 }

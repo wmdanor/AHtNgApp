@@ -5,6 +5,9 @@
     </li>
 
     <ng-container *ngIf="loggedUserId">
+      <li ngbNavItem="library">
+        <a ngbNavLink routerLink="/library">Library</a>
+      </li>
       <li ngbNavItem="friends">
         <a ngbNavLink routerLink="/friends">Friends</a>
       </li>

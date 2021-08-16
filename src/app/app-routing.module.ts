@@ -17,6 +17,10 @@ const routes: Routes = [
     loadChildren: () => import('./features/games/games.module').then(m => m.GamesModule)
   },
   {
+    path: 'library',
+    loadChildren: () => import('./features/library/library.module').then(m => m.LibraryModule)
+  },
+  {
     path: 'friends',
     loadChildren: () => import('./features/friends/friends.module').then(m => m.FriendsModule)
   },

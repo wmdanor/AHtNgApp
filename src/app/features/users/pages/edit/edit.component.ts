@@ -7,7 +7,8 @@ import {UsersService} from "@core/services/users.service";
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  styleUrls: ['./edit.component.scss'],
+  host: {'class': 'container-fluid d-flex flex-grow-1 flex-column align-items-center justify-content-center'}
 })
 export class EditComponent implements OnInit {
   private user: User | undefined;

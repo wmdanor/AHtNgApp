@@ -5,19 +5,19 @@ import {
   ActivatedRouteSnapshot
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import {Game} from "../models";
+import {FeaturedGame} from "@core/models/games";
 import {GamesService} from "@/features/games/services/games.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class GameResolver implements Resolve<Game | undefined> {
+export class GameResolver implements Resolve<FeaturedGame | undefined> {
   constructor(
     private readonly gamesService: GamesService
   ) {
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Game | undefined> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<FeaturedGame | undefined> {
     const id = Number(route.params.id);
     return this.gamesService.getGame$(id);
   }
