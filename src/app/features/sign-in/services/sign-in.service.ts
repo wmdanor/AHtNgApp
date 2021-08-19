@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
-import {SignInCredentials} from "@/features/sign-in/models";
+import {SignInCredentials, SignInResponse} from "@/features/sign-in/models";
 import {Observable, of} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {apiBaseUrl} from "@core/constants/api";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignInService {
 
-  constructor() { }
+  constructor(
+    private readonly http: HttpClient
+  ) { }
 
-  // TODO: change type from unknown and add http service
-  public signIn$(credentials: SignInCredentials): Observable<unknown> {
-    return of(null);
+  public signIn$(credentials: SignInCredentials): Observable<SignInResponse> {
+    return this.http.post<SignInResponse>(apiBaseUrl + '/auth/sign-in', {...credentials});
   }
 }

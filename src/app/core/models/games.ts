@@ -9,7 +9,7 @@ export interface Game {
 }
 
 export interface FeaturedGame extends Game {
-  isInLibrary: boolean;
+  isInLibrary?: boolean;
 }
 
 export interface GamesPage extends PaginatedResult {

@@ -21,6 +21,15 @@ export class FriendListItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.friendsService.getFriendshipStatus$(this.friend.user.id).subscribe(
+      (status) => {
+        this.friend = {
+          ...this.friend,
+          status,
+        }
+        this.friendChange.emit(this.friend);
+      }
+    )
   }
 
   sendRequest(): void {
@@ -48,7 +57,7 @@ export class FriendListItemComponent implements OnInit {
       .then(() => {
         this.friend = {
           ...this.friend,
-          status: status,
+          status,
         }
         this.friendChange.emit(this.friend);
         this.friendsService.updateFriendshipStatus$(this.friend);

@@ -10,7 +10,7 @@ export enum FriendStatus {
 
 export interface Friend {
   user: User;
-  status: FriendStatus;
+  status?: FriendStatus;
 }
 
 export interface FriendsPage extends PaginatedResult {

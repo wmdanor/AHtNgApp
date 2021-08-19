@@ -1,6 +1,6 @@
 <div class="shadow p-3 d-flex align-items-center justify-content-between">
-  <span>{{friend?.user?.username}}</span>
-  <div class="d-flex" [ngSwitch]="friend?.status">
+  <span>{{friend.user.username}}</span>
+  <div class="d-flex" [ngSwitch]="friend.status">
     <ng-template [ngSwitchCase]="friendStatus.None">
       <button class="btn btn-primary" (click)="sendRequest()">Send request</button>
     </ng-template>

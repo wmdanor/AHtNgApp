@@ -48,12 +48,13 @@ export class SignInComponent implements OnInit {
     return this.password?.invalid && (this.password?.dirty || this.password?.touched);
   }
 
-  // TODO finish method
   public submit(): void {
     if (this.signInForm?.valid) {
       const data = this.signInForm?.value;
 
-      const result = this.signInService.signIn$(data);
+      const response = this.signInService.signIn$(data).subscribe((response) => {
+        // TODO: add data to localstorage, cookies and global state
+      });
 
       // ...
     }

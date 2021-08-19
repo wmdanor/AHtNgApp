@@ -18,6 +18,16 @@ export class GamesListItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const id = 1;
+    this.gamesService.isInLibrary$(this.game.id, id).subscribe(
+      (isInLibrary: boolean) => {
+        this.game = {
+          ...this.game,
+          isInLibrary,
+        }
+        this.gameChange.emit(this.game);
+      }
+    )
   }
 
   public get description() {
