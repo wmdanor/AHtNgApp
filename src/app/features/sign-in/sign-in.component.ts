@@ -54,6 +54,7 @@ export class SignInComponent implements OnInit {
 
       const response = this.signInService.signIn$(data).subscribe((response) => {
         // TODO: add data to localstorage, cookies and global state
+        console.log(response);
       });
 
       // ...

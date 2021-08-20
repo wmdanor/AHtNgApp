@@ -14,6 +14,6 @@ export class SignInService {
   ) { }
 
   public signIn$(credentials: SignInCredentials): Observable<SignInResponse> {
-    return this.http.post<SignInResponse>(apiBaseUrl + '/auth/sign-in', {...credentials});
+    return this.http.post<SignInResponse>(apiBaseUrl + 'auth/sign-in', {...credentials});
   }
 }

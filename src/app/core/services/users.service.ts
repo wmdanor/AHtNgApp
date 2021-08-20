@@ -4,7 +4,6 @@ import {Observable, of} from "rxjs";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {apiBaseUrl} from "@core/constants/api";
 import {map} from "rxjs/operators";
-import * as Url from "url";
 
 @Injectable({
   providedIn: 'root'

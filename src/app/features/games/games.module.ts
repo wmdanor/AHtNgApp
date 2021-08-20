@@ -9,6 +9,7 @@ import { GamesListFilterComponent } from './components/games-list-filter/games-l
 import {SharedModule} from "@shared/shared.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
     GamesRoutingModule,
     SharedModule,
     NgbModule,

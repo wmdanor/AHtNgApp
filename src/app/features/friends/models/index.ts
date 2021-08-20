@@ -2,10 +2,10 @@ import {User} from "@core/models/user";
 import {PaginatedResult} from "@core/models/pagination";
 
 export enum FriendStatus {
-  Friends,
-  SentRequest,
-  ReceivedRequest,
-  None
+  Friends = 'FRIENDS',
+  SentRequest = 'SENT_REQUEST',
+  ReceivedRequest = 'RECEIVED_REQUEST',
+  None = 'NONE'
 }
 
 export interface Friend {
