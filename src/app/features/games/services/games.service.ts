@@ -37,7 +37,8 @@ export class GamesService {
   }
 
   public isInLibrary$(id: number, userId: number): Observable<boolean> {
-    return this.http.get<boolean>(apiBaseUrl + `users/${userId}/games/${id}/check`);
+    return this.http.get(apiBaseUrl + `users/${userId}/games/${id}/check`)
+      .pipe((res: any) => res.isInLibrary);
   }
 
   public getGame$(id: number): Observable<FeaturedGame | undefined> {

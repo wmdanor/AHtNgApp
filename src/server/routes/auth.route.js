@@ -4,7 +4,7 @@ const {
   registerUser,
   loginUser,
   restorePassword,
-} = require('../controllers/authController');
+} = require('../controllers/auth.controller');
 const {
   signUpValidator,
   signInValidator,
