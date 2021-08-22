@@ -1,6 +1,6 @@
 const {
   getAllTags,
-} = require('../services/users.service');
+} = require('../services/tags.service');
 
 const getTags = async (req, res) => {
   res.json({tags: getAllTags()});

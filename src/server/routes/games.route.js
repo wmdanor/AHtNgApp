@@ -6,6 +6,7 @@ const {
 const gamesRouter = new express.Router();
 
 gamesRouter.get('/', asyncWrapper());
+gamesRouter.get('/:id', asyncWrapper());
 
 module.exports = {
   gamesRouter,

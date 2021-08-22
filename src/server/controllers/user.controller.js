@@ -79,9 +79,49 @@ const getUser = async (req, res) => {
   });
 };
 
+const libraryGetGames = async (req, res) => {
+  // TODO
+};
+
+const libraryAddGame = async (req, res) => {
+  // TODO
+};
+
+const libraryCheckGame = async (req, res) => {
+  // TODO
+};
+
+const friendsGetFriends = async (req, res) => {
+  // TODO
+};
+
+const friendsGetSent = async (req, res) => {
+  // TODO
+};
+
+const friendsGetReceived = async (req, res) => {
+  // TODO
+};
+
+const friendsCheckStatus = async (req, res) => {
+  // TODO
+};
+
+const friendsSetStatus = async (req, res) => {
+  // TODO
+};
+
 module.exports = {
   getCurrentUser,
   deleteCurrentUser,
   changeCurrentUserPassword,
   getUser,
+  libraryGetGames,
+  libraryAddGame,
+  libraryCheckGame,
+  friendsGetFriends,
+  friendsGetSent,
+  friendsGetReceived,
+  friendsCheckStatus,
+  friendsSetStatus,
 };
