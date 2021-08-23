@@ -19,7 +19,8 @@ export class FriendsService {
 
   public getFriendshipStatus$(friendId: number): Observable<FriendStatus> {
     const id = 1;
-    return this.http.get<FriendStatus>(this.apiUrl + `/${id}/friends/${friendId}/status`);
+    return this.http.get(this.apiUrl + `/${id}/friends/${friendId}/status`)
+      .pipe(map((res: any) => res.status));
   }
 
   // Select observable type

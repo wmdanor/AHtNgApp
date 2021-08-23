@@ -3,6 +3,15 @@ const {
   getUserById,
   deleteUserById,
   updateUserPassword,
+  getUserToken,
+  libraryGetLibraryGames,
+  libraryPostGame,
+  libraryIsInLibrary,
+  friendsGetFriendsPage,
+  friendsGetSentRequestsPage,
+  friendsGetRecRequestsPage,
+  friendsGetFriendshipStatus,
+  friendsSetFriendshipStatus,
 } = require('../services/users.service');
 
 const getCurrentUser = async (req, res) => {
@@ -80,35 +89,86 @@ const getUser = async (req, res) => {
 };
 
 const libraryGetGames = async (req, res) => {
-  // TODO
+  const {id} = req.user;
+
+  const games = await libraryGetLibraryGames(id);
+
+  res.json({games});
 };
 
 const libraryAddGame = async (req, res) => {
-  // TODO
+  const {id} = req.user;
+  const gameId = req.params.id;
+
+  const game = await libraryPostGame(id, gameId);
+
+  res.json({gameId});
 };
 
 const libraryCheckGame = async (req, res) => {
-  // TODO
+  const {id} = req.user;
+
+  const isInLibrary = await libraryIsInLibrary(id, req.params.id);
+
+  res.json({isInLibrary});
 };
 
 const friendsGetFriends = async (req, res) => {
-  // TODO
+  const {id} = req.user;
+  const {limit, offset} = req.query;
+
+  const pagination = {limit: Number(limit), offset: Number(offset)};
+
+  const page = await friendsGetFriendsPage(id, pagination);
+
+  res.json({
+    ...pagination,
+    ...page,
+  });
 };
 
 const friendsGetSent = async (req, res) => {
-  // TODO
+  const {id} = req.user;
+  const {limit, offset} = req.query;
+
+  const pagination = {limit: Number(limit), offset: Number(offset)};
+
+  const page = await friendsGetSentRequestsPage(id, pagination);
+
+  res.json({
+    ...pagination,
+    ...page,
+  });
 };
 
 const friendsGetReceived = async (req, res) => {
-  // TODO
+  const {id} = req.user;
+  const {limit, offset} = req.query;
+
+  const pagination = {limit: Number(limit), offset: Number(offset)};
+
+  const page = await friendsGetRecRequestsPage(id, pagination);
+
+  res.json({
+    ...pagination,
+    ...page,
+  });
 };
 
 const friendsCheckStatus = async (req, res) => {
-  // TODO
+  const {id, friendId} = req.user;
+
+  const status = friendsGetFriendshipStatus(id, friendId);
+
+  res.json({status});
 };
 
 const friendsSetStatus = async (req, res) => {
-  // TODO
+  const {id, friendId} = req.user;
+
+  const status = friendsSetFriendshipStatus(id, friendId, req.body.status);
+
+  res.json({status});
 };
 
 module.exports = {
