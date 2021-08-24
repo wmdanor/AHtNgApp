@@ -1,4 +1,4 @@
-﻿const {BadRequestError} = require('../../utils/errors');
+﻿const {BadRequestError} = require('../../models/errors');
 
 /**
  * Creating validating middleware function

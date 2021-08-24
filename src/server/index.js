@@ -5,18 +5,16 @@ const cookieParser = require('cookie-parser');
 const {HttpError} = require("./models/errors");
 const mongoose = require("mongoose");
 const {dbConnectionString} = require("./config/default");
+const {apiRouter} = require("./routes/api.route");
 
 const staticPath = path.join(__dirname + '../../../dist/AHtNgApp');
 
 app.use(cookieParser());
+app.use(express.json());
 
 app.use(express.static(staticPath));
 
-app.post('/api/auth/sign-in', (req, res) => {
-  console.log(req.cookies)
-  // res.cookie('lul', 'omegalul');
-  res.cookie('lul', 'omegalul').json({status: 200});
-});
+app.use('/api', apiRouter);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(staticPath, 'index.html'));

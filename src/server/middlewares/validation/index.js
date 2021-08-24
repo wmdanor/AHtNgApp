@@ -3,23 +3,17 @@ const {
   createQueryValidator,
 } = require('./createValidator');
 const {
-  // offsetLimit,
-  // loadStatus,
-  // signUp,
-  // signIn,
-  // forgotPassword,
-  // changePassword,
-  // postPutTruck,
-  // postPutLoad,
+  offsetLimit,
+  signUp,
+  signIn,
+  forgotPassword,
+  changePassword,
 } = require('./schemas');
 
 module.exports = {
-  // offsetLimitQueryValidator: createQueryValidator(offsetLimit),
-  // loadStatusQueryValidator: createQueryValidator(loadStatus),
-  // signUpValidator: createBodyValidator(signUp),
-  // signInValidator: createBodyValidator(signIn),
-  // forgotPasswordValidator: createBodyValidator(forgotPassword),
-  // changePasswordValidator: createBodyValidator(changePassword),
-  // postPutTruckValidator: createBodyValidator(postPutTruck),
-  // postPutLoadValidator: createBodyValidator(postPutLoad),
+  offsetLimitQueryValidator: createQueryValidator(offsetLimit),
+  signUpValidator: createBodyValidator(signUp),
+  signInValidator: createBodyValidator(signIn),
+  forgotPasswordValidator: createBodyValidator(forgotPassword),
+  changePasswordValidator: createBodyValidator(changePassword),
 };
