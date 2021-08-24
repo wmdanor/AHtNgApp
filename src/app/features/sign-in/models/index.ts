@@ -7,5 +7,4 @@ export interface SignInCredentials {
 
 export interface SignInResponse {
   user: User;
-  token: string;
 }

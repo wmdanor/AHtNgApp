@@ -3,6 +3,8 @@ const path = require('path');
 const app = express();
 const cookieParser = require('cookie-parser');
 const {HttpError} = require("./models/errors");
+const mongoose = require("mongoose");
+const {dbConnectionString} = require("./config/default");
 
 const staticPath = path.join(__dirname + '../../../dist/AHtNgApp');
 
@@ -32,4 +34,24 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.listen(process.env.PORT || 8080);
+mongoose.connect(dbConnectionString, {
+  useNewUrlParser: true, useUnifiedTopology: true,
+}).then(() => {
+  console.log('DB connection established');
+}).catch(() => {
+  console.error('Failed to establish DB connection');
+});
+
+module.exports = app;
+
+if (require.main === module) {
+  const port = process.env.PORT || 8080;
+
+  try {
+    app.listen(port, () => {
+      console.log(`Server started on port ${port}`);
+    });
+  } catch (err) {
+    console.error('Failed to start the server - ', err.message);
+  }
+}

@@ -18,8 +18,7 @@ export class GamesListItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const id = 1;
-    this.gamesService.isInLibrary$(this.game.id, id).subscribe(
+    this.gamesService.isInLibrary$(this.game.id).subscribe(
       (isInLibrary: boolean) => {
         this.game = {
           ...this.game,

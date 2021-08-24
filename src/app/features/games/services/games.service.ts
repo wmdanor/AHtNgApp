@@ -6,16 +6,22 @@ import {Pagination} from "@core/models/pagination";
 import {FriendsPage} from "@/features/friends/models";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
+import {LoggedUserService} from "@core/services/logged-user.service";
+import {User} from "@core/models/user";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GamesService {
   private readonly apiUrl = apiBaseUrl + 'games';
+  private user: User | undefined;
 
   constructor(
-    private readonly http: HttpClient
-  ) { }
+    private readonly http: HttpClient,
+    private readonly state: LoggedUserService
+  ) {
+    this.state.getLoggedUser$().subscribe((user) => this.user = user);
+  }
 
   // TODO: add filters
   public getGames$(pagination: Pagination, filter: GamesFilter): Observable<GamesPage> {
@@ -36,7 +42,8 @@ export class GamesService {
     return this.http.get<GamesPage>(this.apiUrl, {params: {...pagination, ...filter}});
   }
 
-  public isInLibrary$(id: number, userId: number): Observable<boolean> {
+  public isInLibrary$(id: number): Observable<boolean> {
+    const userId = this.user?.id;
     return this.http.get(apiBaseUrl + `users/${userId}/games/${id}/check`)
       .pipe((res: any) => res.isInLibrary);
   }

@@ -6,26 +6,31 @@ import {apiBaseUrl} from "@core/constants/api";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {User} from "@core/models/user";
+import {LoggedUserService} from "@core/services/logged-user.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FriendsService {
   private readonly apiUrl = apiBaseUrl + 'users';
+  private user: User | undefined;
 
   constructor(
-    private readonly http: HttpClient
-  ) { }
+    private readonly http: HttpClient,
+    private readonly state: LoggedUserService,
+  ) {
+    this.state.getLoggedUser$().subscribe((user) => this.user = user);
+  }
 
   public getFriendshipStatus$(friendId: number): Observable<FriendStatus> {
-    const id = 1;
+    const id = this.user?.id;
     return this.http.get(this.apiUrl + `/${id}/friends/${friendId}/status`)
       .pipe(map((res: any) => res.status));
   }
 
   // Select observable type
   public updateFriendshipStatus$(friend: Friend): Observable<unknown> {
-    const id = 1;
+    const id = this.user?.id;
     return this.http.put(this.apiUrl + `/${id}/friends/${friend.user.id}/status`, {status: friend.status});
   }
 
@@ -45,7 +50,7 @@ export class FriendsService {
     //     }
     //   ]
     // });
-    const id = 1; // TODO get id from state
+    const id = this.user?.id;
     return this.http.get<FriendsPage>(this.apiUrl + `/${id}/friends`, {params: {...pagination}});
   }
 
@@ -64,7 +69,7 @@ export class FriendsService {
     //     }
     //   ]
     // });
-    const id = 1; // TODO get id from state
+    const id = this.user?.id;
     return this.http.get<FriendsPage>(this.apiUrl + `/${id}/friends/sent`, {params: {...pagination}});
   }
 
@@ -83,7 +88,7 @@ export class FriendsService {
     //     }
     //   ]
     // });
-    const id = 1; // TODO get id from state
+    const id = this.user?.id;
     return this.http.get<FriendsPage>(this.apiUrl + `/${id}/friends/received`, {params: {...pagination}});
   }
 
@@ -102,7 +107,7 @@ export class FriendsService {
     //     }
     //   ]
     // });
-    const id = 1;
+    const id = this.user?.id;
     return this.http.get(
       this.apiUrl,
       {params: {...pagination, query}},

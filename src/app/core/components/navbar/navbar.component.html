@@ -4,7 +4,7 @@
       <a ngbNavLink routerLink="/games">Games</a>
     </li>
 
-    <ng-container *ngIf="loggedUserId">
+    <ng-container *ngIf="loggedUser">
       <li ngbNavItem="library">
         <a ngbNavLink routerLink="/library">Library</a>
       </li>
@@ -12,11 +12,11 @@
         <a ngbNavLink routerLink="/friends">Friends</a>
       </li>
       <li ngbNavItem="profile" class="ml-auto">
-        <a ngbNavLink [routerLink]="'/users/' + loggedUserId">Profile</a>
+        <a ngbNavLink [routerLink]="'/users/' + loggedUser.id">Profile</a>
       </li>
     </ng-container>
 
-    <li *ngIf="!loggedUserId" ngbNavItem="sign-in" class="ml-auto">
+    <li *ngIf="!loggedUser" ngbNavItem="sign-in" class="ml-auto">
       <a ngbNavLink routerLink="/sign-in">Sign in</a>
     </li>
   </ul>

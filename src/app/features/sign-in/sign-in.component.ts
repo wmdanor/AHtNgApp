@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {SignInService} from "@/features/sign-in/services/sign-in.service";
+import {LoggedUserService} from "@core/services/logged-user.service";
 
 @Component({
   selector: 'app-sign-in',
@@ -10,9 +11,11 @@ import {SignInService} from "@/features/sign-in/services/sign-in.service";
 })
 export class SignInComponent implements OnInit {
   public signInForm: FormGroup | undefined;
+  public errorMessage: string = '';
 
   constructor(
-    private readonly signInService: SignInService
+    private readonly signInService: SignInService,
+    private readonly state: LoggedUserService
   ) { }
 
   ngOnInit(): void {
@@ -52,12 +55,11 @@ export class SignInComponent implements OnInit {
     if (this.signInForm?.valid) {
       const data = this.signInForm?.value;
 
-      const response = this.signInService.signIn$(data).subscribe((response) => {
-        // TODO: add data to localstorage, cookies and global state
-        console.log(response);
-      });
-
-      // ...
+      this.signInService.signIn$(data).subscribe((response) => {
+        this.state.updateLoggedUser();
+      }, (error => {
+        console.log(error);
+      }));
     }
   }
 }
