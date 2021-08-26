@@ -80,7 +80,9 @@ export class FriendsListComponent implements OnInit, OnChanges {
       offset: this.offset,
       limit: this.pageSize
     }, this.searchQuery)
-      .subscribe((friendsPage) => this.pageData = friendsPage);
+      .subscribe((friendsPage) => {
+        this.pageData = friendsPage;
+      });
   }
 
   private get offset() {

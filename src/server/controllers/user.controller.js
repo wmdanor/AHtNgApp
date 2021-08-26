@@ -3,7 +3,6 @@ const {
   getUserById,
   deleteUserById,
   updateUserPassword,
-  getUserToken,
   libraryGetLibraryGames,
   libraryPostGame,
   libraryIsInLibrary,
@@ -11,8 +10,31 @@ const {
   friendsGetSentRequestsPage,
   friendsGetRecRequestsPage,
   friendsGetFriendshipStatus,
-  friendsSetFriendshipStatus,
+  friendsSetFriendshipStatus, getUsersPage,
 } = require('../services/users.service');
+const jwt = require("jsonwebtoken");
+const {jwtSecret} = require("../config/default");
+
+const getUsers = async (req, res) => {
+  const {limit, offset, query} = req.query;
+
+  const pagination = {limit, offset};
+
+  const options = {query};
+  const authToken = req.cookies.jwt;
+
+  if (authToken) {
+    const user = jwt.verify(authToken, jwtSecret);
+    options.ignoreId = user.userId;
+  }
+
+  const page = await getUsersPage(pagination, options);
+
+  res.json({
+    ...pagination,
+    ...page,
+  });
+};
 
 const getCurrentUser = async (req, res) => {
   const {userId} = req.user;
@@ -89,7 +111,7 @@ const getUser = async (req, res) => {
 };
 
 const libraryGetGames = async (req, res) => {
-  const {id} = req.user;
+  const {id} = req.params;
 
   const games = await libraryGetLibraryGames(id);
 
@@ -97,7 +119,11 @@ const libraryGetGames = async (req, res) => {
 };
 
 const libraryAddGame = async (req, res) => {
-  const {id} = req.user;
+  const {id} = req.params;
+  const {userId} = req.user;
+  if (id !== userId) {
+    throw new BadRequestError('You have no permission for this action');
+  }
   const gameId = req.params.id;
 
   const game = await libraryPostGame(id, gameId);
@@ -106,7 +132,7 @@ const libraryAddGame = async (req, res) => {
 };
 
 const libraryCheckGame = async (req, res) => {
-  const {id} = req.user;
+  const {id} = req.params;
 
   const isInLibrary = await libraryIsInLibrary(id, req.params.id);
 
@@ -114,10 +140,10 @@ const libraryCheckGame = async (req, res) => {
 };
 
 const friendsGetFriends = async (req, res) => {
-  const {id} = req.user;
+  const {id} = req.params;
   const {limit, offset} = req.query;
 
-  const pagination = {limit: Number(limit), offset: Number(offset)};
+  const pagination = {limit, offset};
 
   const page = await friendsGetFriendsPage(id, pagination);
 
@@ -128,7 +154,11 @@ const friendsGetFriends = async (req, res) => {
 };
 
 const friendsGetSent = async (req, res) => {
-  const {id} = req.user;
+  const {id} = req.params;
+  const {userId} = req.user;
+  if (id !== userId) {
+    throw new BadRequestError('You have no permission for this action');
+  }
   const {limit, offset} = req.query;
 
   const pagination = {limit: Number(limit), offset: Number(offset)};
@@ -142,7 +172,11 @@ const friendsGetSent = async (req, res) => {
 };
 
 const friendsGetReceived = async (req, res) => {
-  const {id} = req.user;
+  const {id} = req.params;
+  const {userId} = req.user;
+  if (id !== userId) {
+    throw new BadRequestError('You have no permission for this action');
+  }
   const {limit, offset} = req.query;
 
   const pagination = {limit: Number(limit), offset: Number(offset)};
@@ -156,22 +190,31 @@ const friendsGetReceived = async (req, res) => {
 };
 
 const friendsCheckStatus = async (req, res) => {
-  const {id, friendId} = req.user;
+  const {id, friendId} = req.params;
+  const {userId} = req.user;
+  if (id !== userId) {
+    throw new BadRequestError('You have no permission for this action');
+  }
 
-  const status = friendsGetFriendshipStatus(id, friendId);
+  const status = await friendsGetFriendshipStatus(id, friendId);
 
   res.json({status});
 };
 
 const friendsSetStatus = async (req, res) => {
-  const {id, friendId} = req.user;
+  const {id, friendId} = req.params;
+  const {userId} = req.user;
+  if (id !== userId) {
+    throw new BadRequestError('You have no permission for this action');
+  }
 
-  const status = friendsSetFriendshipStatus(id, friendId, req.body.status);
+  const status = await friendsSetFriendshipStatus(id, friendId, req.body.status);
 
   res.json({status});
 };
 
 module.exports = {
+  getUsers,
   getCurrentUser,
   deleteCurrentUser,
   changeCurrentUserPassword,

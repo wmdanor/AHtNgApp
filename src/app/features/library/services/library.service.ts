@@ -21,15 +21,6 @@ export class LibraryService {
   }
 
   public getGamesInLibrary$(): Observable<Game[]> {
-    // return of([
-    //   {
-    //     id: 1,
-    //     name: 'game1',
-    //     price: 100,
-    //     description: 'description',
-    //     tags: ['tag1', 'tag2']
-    //   }
-    // ]);
     const id = this.user?.id;
     return this.http.get(apiBaseUrl + `users/${id}/games`)
       .pipe(map((res: any) => res.games));

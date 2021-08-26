@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Game = new mongoose.Schema({
-  _id: {
+  id: {
     type: Number,
     required: true,
     unique: true,
@@ -17,6 +17,7 @@ const Game = new mongoose.Schema({
   },
   description: {
     type: String,
+    default: '',
   },
   tags: {
     type: [Number],

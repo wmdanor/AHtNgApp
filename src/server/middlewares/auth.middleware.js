@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const {jwtSecret} = require("../config/default");
 
 const authMiddleware = (req, res, next) => {
-  const authToken = req.cookies.get('jwt');
+  const authToken = req.cookies.jwt;
 
   if (!authToken) {
     throw new UnauthorizedError('Authorization token was not found');

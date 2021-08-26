@@ -21,13 +21,20 @@ export class FriendListItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    if (this.friend.status) {
+      return;
+    }
     this.friendsService.getFriendshipStatus$(this.friend.user.id).subscribe(
       (status) => {
-        this.friend = {
+        // this.friend = {
+        //   ...this.friend,
+        //   status,
+        // }
+        // if (this.friend.status === status) return;
+        this.friendChange.emit({
           ...this.friend,
           status,
-        }
-        this.friendChange.emit(this.friend);
+        });
       }
     )
   }
@@ -55,12 +62,11 @@ export class FriendListItemComponent implements OnInit {
   updateStatus(status: FriendStatus) {
     this.modalService.open(ConfirmModalComponent).result
       .then(() => {
-        this.friend = {
+        this.friendChange.emit({
           ...this.friend,
           status,
-        }
-        this.friendChange.emit(this.friend);
-        this.friendsService.updateFriendshipStatus$(this.friend);
+        });
+        this.friendsService.updateFriendshipStatus$(this.friend.user.id, status).subscribe();
       });
   }
 }

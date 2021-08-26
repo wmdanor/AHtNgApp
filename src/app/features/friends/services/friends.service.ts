@@ -19,7 +19,15 @@ export class FriendsService {
     private readonly http: HttpClient,
     private readonly state: LoggedUserService,
   ) {
+    // console.log('Ctor', http);
     this.state.getLoggedUser$().subscribe((user) => this.user = user);
+    // console.log('Ctor2', http, this.qq);
+
+    this.getFriendshipStatus$ = this.getFriendshipStatus$.bind(this);
+    this.getFriends$ = this.getFriends$.bind(this);
+    this.getReceivedRequests$ = this.getReceivedRequests$.bind(this);
+    this.getSentRequests$ = this.getSentRequests$.bind(this);
+    this.findUsers$ = this.findUsers$.bind(this);
   }
 
   public getFriendshipStatus$(friendId: number): Observable<FriendStatus> {
@@ -29,96 +37,45 @@ export class FriendsService {
   }
 
   // Select observable type
-  public updateFriendshipStatus$(friend: Friend): Observable<unknown> {
+  public updateFriendshipStatus$(friendId: number, status: FriendStatus): Observable<unknown> {
     const id = this.user?.id;
-    return this.http.put(this.apiUrl + `/${id}/friends/${friend.user.id}/status`, {status: friend.status});
+    return this.http.post(this.apiUrl + `/${id}/friends/${friendId}/status`, {status})
+      .pipe(map((res: any) => res.status));
   }
 
   // TODO: implement normally
   public getFriends$(pagination: Pagination): Observable<FriendsPage> {
-    // return of({
-    //   ...pagination,
-    //   count: 1,
-    //   friends: [
-    //     {
-    //       user: {
-    //         id: 1,
-    //         username: 'example1',
-    //         email: 'example@mail.com',
-    //       },
-    //       status: FriendStatus.Friends,
-    //     }
-    //   ]
-    // });
     const id = this.user?.id;
-    return this.http.get<FriendsPage>(this.apiUrl + `/${id}/friends`, {params: {...pagination}});
+    return this.http.get(this.apiUrl + `/${id}/friends`, {params: {...pagination}})
+      .pipe(map(FriendsService.mapFriendsPage));
   }
 
   public getSentRequests$(pagination: Pagination): Observable<FriendsPage> {
-    // return of({
-    //   ...pagination,
-    //   count: 2,
-    //   friends: [
-    //     {
-    //       user: {
-    //         id: 1,
-    //         username: 'example2',
-    //         email: 'example@mail.com',
-    //       },
-    //       status: FriendStatus.SentRequest,
-    //     }
-    //   ]
-    // });
     const id = this.user?.id;
-    return this.http.get<FriendsPage>(this.apiUrl + `/${id}/friends/sent`, {params: {...pagination}});
+    return this.http.get(this.apiUrl + `/${id}/friends/sent`, {params: {...pagination}})
+      .pipe(map(FriendsService.mapFriendsPage));
   }
 
   public getReceivedRequests$(pagination: Pagination): Observable<FriendsPage> {
-    // return of({
-    //   ...pagination,
-    //   count: 3,
-    //   friends: [
-    //     {
-    //       user: {
-    //         id: 1,
-    //         username: 'example3',
-    //         email: 'example@mail.com',
-    //       },
-    //       status: FriendStatus.ReceivedRequest,
-    //     }
-    //   ]
-    // });
     const id = this.user?.id;
-    return this.http.get<FriendsPage>(this.apiUrl + `/${id}/friends/received`, {params: {...pagination}});
+    return this.http.get(this.apiUrl + `/${id}/friends/received`, {params: {...pagination}})
+      .pipe(map(FriendsService.mapFriendsPage));
   }
 
   public findUsers$(pagination: Pagination, query: string): Observable<FriendsPage> {
-    // return of({
-    //   ...pagination,
-    //   count: 4,
-    //   friends: [
-    //     {
-    //       user: {
-    //         id: 1,
-    //         username: 'example4',
-    //         email: 'example@mail.com',
-    //       },
-    //       status: FriendStatus.None,
-    //     }
-    //   ]
-    // });
-    const id = this.user?.id;
     return this.http.get(
       this.apiUrl,
       {params: {...pagination, query}},
       )
-      .pipe(map(({limit, offset, count, users}: any) => {
-        return {
-          limit, offset, count,
-          friends: users.map((user: User) => {
-            return {user};
-          })
-        }
-    }));
+      .pipe(map(FriendsService.mapFriendsPage));
+  }
+
+  private static mapFriendsPage({limit, offset, count, users}: any) : FriendsPage {
+    return {
+      limit, offset, count,
+      friends: users.map((user: User) => {
+        return {user};
+      })
+    }
   }
 }

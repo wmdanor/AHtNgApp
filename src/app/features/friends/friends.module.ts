@@ -10,7 +10,6 @@ import {SharedModule} from "@shared/shared.module";
 import {HttpClientModule} from "@angular/common/http";
 
 
-
 @NgModule({
   declarations: [
     FriendsComponent,
@@ -20,10 +19,10 @@ import {HttpClientModule} from "@angular/common/http";
   imports: [
     CommonModule,
     HttpClientModule,
+    SharedModule,
     FriendsRoutingModule,
     NgbModule,
     ReactiveFormsModule,
-    SharedModule
   ]
 })
 export class FriendsModule { }

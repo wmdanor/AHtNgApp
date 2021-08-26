@@ -1,5 +1,23 @@
 ﻿const {BadRequestError} = require('../../models/errors');
 
+const createValidator = (part) => (schema) => {
+  return async (req, res, next) => {
+    try {
+      const obj = req[part];
+      await schema.validateAsync(obj);
+      const {transform} = schema;
+      if (transform) {
+        for (const key of Object.keys(transform)) {
+          obj[key] = transform[key](obj[key]);
+        }
+      }
+      next();
+    } catch (err) {
+      next(new BadRequestError(err.message));
+    }
+  };
+}
+
 /**
  * Creating validating middleware function
  *
@@ -27,6 +45,12 @@ function createQueryValidator(schema) {
   return async (req, res, next) => {
     try {
       await schema.validateAsync(req.query);
+      const {transform} = schema;
+      if (transform) {
+        for (const key of Object.keys(transform)) {
+          req.query[key] = transform[key](req.query[key]);
+        }
+      }
       next();
     } catch (err) {
       next(new BadRequestError(err.message));
@@ -35,6 +59,7 @@ function createQueryValidator(schema) {
 }
 
 module.exports = {
-  createBodyValidator,
-  createQueryValidator,
+  createBodyValidator: createValidator('body'),
+  createQueryValidator: createValidator('query'),
+  createParamsValidator: createValidator('params'),
 };

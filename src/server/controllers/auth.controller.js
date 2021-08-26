@@ -29,7 +29,7 @@ const loginUser = async (req, res) => {
   try {
     const token = await getUserToken({email, password});
 
-    res.json({
+    res.cookie('jwt', token).json({
       jwt_token: token,
     });
   } catch (err) {

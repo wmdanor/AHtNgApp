@@ -7,6 +7,41 @@ const User = require('../models/user');
 const Game = require('../models/game');
 const Friendship = require('../models/friendship');
 
+const getUsersPage = async ({offset, limit}, {query, ignoreId}) => {
+  const match = {};
+
+  if (query) {
+    // match.username = query;
+  }
+
+  if (ignoreId) {
+    match.id = { $ne: ignoreId }
+  }
+
+  const result = await User.aggregate([
+    {
+      $match: {
+        ...match,
+      }
+    },
+    {
+      $facet: {
+        "stage1": [{"$group": {_id: null, count: {$sum: 1}}}],
+        "stage2": [{"$skip": offset}, {"$limit": limit}],
+      }
+    },
+    {$unwind: "$stage1"},
+    {
+      $project: {
+        count: "$stage1.count",
+        users: "$stage2"
+      }
+    }
+  ]);
+
+  return result[0];
+}
+
 const addUser = async ({email, username, password}) => {
   const user = new User({
     email,
@@ -17,13 +52,13 @@ const addUser = async ({email, username, password}) => {
   await user.save();
 };
 
-const getUserById = async (userId) => await User.findById(userId);
+const getUserById = async (userId) => await User.findOne({id: userId});
 
 const deleteUserById = async (userId) =>
-  await User.findByIdAndDelete(userId);
+  await User.findOneAndDelete({id: userId});
 
 const updateUserPassword = async (userId, {oldPassword, newPassword}) => {
-  const user = await User.findById(userId);
+  const user = await User.findOne({id: userId});
 
   if (!user) {
     throw new ArgumentError('User does not exist', 'userId');
@@ -33,7 +68,7 @@ const updateUserPassword = async (userId, {oldPassword, newPassword}) => {
     throw new ArgumentError('Invalid password', 'oldPassword');
   }
 
-  await User.findByIdAndUpdate(userId, {$set: {
+  await User.findOneAndUpdate({id: userId}, {$set: {
       passwordHash: await bcrypt.hash(newPassword, 10),
     }});
 };
@@ -50,18 +85,18 @@ const getUserToken = async ({email, password}) => {
   }
 
   return jwt.sign({
-    userId: user._id,
+    userId: user.id,
     email: user.email,
     username: user.username,
   }, jwtSecret);
 };
 
 const libraryGetLibraryGames = async (userId) => {
-  const {games} = getUserById(userId);
+  const {games} = await getUserById(userId);
   const result = [];
 
   for (const gameId of games) {
-    result.push(Game.findById(gameId));
+    result.push(await Game.findOne({id: gameId}));
   }
 
   return result;
@@ -76,7 +111,7 @@ const libraryPostGame = async (userId, gameId) => {
 
   if (!user.games.find(v => v === gameId)) {
     user.games.push(gameId);
-    await User.findByIdAndUpdate(userId, {$set: {
+    await User.findOneAndUpdate({id: userId}, {$set: {
         games: user.games.push(),
       }});
   }
@@ -92,14 +127,23 @@ const libraryIsInLibrary = async (userId, gameId) => {
   return Boolean(user.games.find(v => v === gameId));
 }
 
+const parseFriendsPage = async (page, userId) => {
+  if (!page) {
+    return {count: 0, users: []};
+  }
+
+  const result = {count: page.count, users: []};
+
+  for (const {userSent, userReceived} of page.records) {
+    result.users.push(await getUserById(userId === userSent ? userReceived : userSent));
+  }
+
+  return result;
+}
+
 const friendsGetFriendsPage = async (userId, {limit, offset}) => {
-  return Friendship.aggregate([
-    {
-      $match: {
-        $or: [{userSent: userId}, {userReceived: userId}],
-        status: 'FRIENDS',
-      }
-    },
+  const page = await Friendship.aggregate([
+    { $match: {$or: [{userSent: userId}, {userReceived: userId}], status: 'FRIENDS'} },
     {
       $facet: {
         "stage1": [{"$group": {_id: null, count: {$sum: 1}}}],
@@ -107,20 +151,15 @@ const friendsGetFriendsPage = async (userId, {limit, offset}) => {
       }
     },
     {$unwind: "$stage1"},
-    {
-      $project: {
-        count: "$stage1.count",
-        friends: "$stage2"
-      }
-    }
+    { $project: {count: "$stage1.count", records: "$stage2"} }
   ]);
+
+  return await parseFriendsPage(page[0], userId);
 }
 
 const friendsGetSentRequestsPage = async (userId, {limit, offset}) => {
-  return Friendship.aggregate([
-    {
-      $match: {userSent: userId, status: 'PENDING'},
-    },
+  const page = await Friendship.aggregate([
+    { $match: {userSent: userId, status: 'PENDING'} },
     {
       $facet: {
         "stage1": [{"$group": {_id: null, count: {$sum: 1}}}],
@@ -128,20 +167,15 @@ const friendsGetSentRequestsPage = async (userId, {limit, offset}) => {
       }
     },
     {$unwind: "$stage1"},
-    {
-      $project: {
-        count: "$stage1.count",
-        friends: "$stage2"
-      }
-    }
+    { $project: {count: "$stage1.count", records: "$stage2"} }
   ]);
+
+  return await parseFriendsPage(page[0], userId);
 }
 
 const friendsGetRecRequestsPage = async (userId, {limit, offset}) => {
-  return Friendship.aggregate([
-    {
-      $match: {userReceived: userId, status: 'PENDING'}
-    },
+  const page = await Friendship.aggregate([
+    { $match: {userReceived: userId, status: 'PENDING'} },
     {
       $facet: {
         "stage1": [{"$group": {_id: null, count: {$sum: 1}}}],
@@ -149,13 +183,10 @@ const friendsGetRecRequestsPage = async (userId, {limit, offset}) => {
       }
     },
     {$unwind: "$stage1"},
-    {
-      $project: {
-        count: "$stage1.count",
-        friends: "$stage2"
-      }
-    }
+    { $project: {count: "$stage1.count", records: "$stage2"} }
   ]);
+
+  return await parseFriendsPage(page[0], userId);
 }
 
 const parseFriendshipStatus = (record, userId) => {
@@ -186,7 +217,7 @@ const friendsGetFriendshipStatus = async (userId, friendId) => {
 }
 
 const friendsSetFriendshipStatus = async (userId, friendId, status) => {
-  let record;
+  let record = undefined;
   switch (status) {
     case 'FRIENDS':
       record = await Friendship.findOneAndUpdate(
@@ -198,7 +229,7 @@ const friendsSetFriendshipStatus = async (userId, friendId, status) => {
       }
       return 'FRIENDS';
     case 'SENT_REQUEST':
-      record = Friendship.findOne({
+      record = await Friendship.findOne({
         $or: [
           {userSent: userId, userReceived: friendId},
           {userSent: friendId, userReceived: userId},
@@ -207,14 +238,13 @@ const friendsSetFriendshipStatus = async (userId, friendId, status) => {
       if (record) {
         throw new ArgumentError(`Friendship status is already ${parseFriendshipStatus(record, userId)}`, 'status');
       }
-      await Friendship.findByIdAndUpdate(record._id, {$set: {status}});
       const rec = new Friendship({userSent: userId, userReceived: friendId, status: 'PENDING'});
       await rec.save();
       return 'SENT_REQUEST'
     case 'RECEIVED_REQUEST':
       throw new ArgumentError("Status 'RECEIVED_REQUEST' can not be set", 'status');
     case 'NONE':
-      record = Friendship.findOneAndDelete({
+      record = await Friendship.findOneAndDelete({
         $or: [
           {userSent: userId, userReceived: friendId},
           {userSent: friendId, userReceived: userId},
@@ -230,6 +260,7 @@ const friendsSetFriendshipStatus = async (userId, friendId, status) => {
 }
 
 module.exports = {
+  getUsersPage,
   addUser,
   getUserById,
   deleteUserById,

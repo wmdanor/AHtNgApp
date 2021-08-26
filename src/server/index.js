@@ -3,8 +3,21 @@ const path = require('path');
 const app = express();
 const cookieParser = require('cookie-parser');
 const {HttpError} = require("./models/errors");
-const mongoose = require("mongoose");
+
 const {dbConnectionString} = require("./config/default");
+const mongoose = require("mongoose");
+const autoIncrement = require('./mongo-autoincr');
+  mongoose.connect(dbConnectionString, {
+  useNewUrlParser: true, useUnifiedTopology: true,
+  useFindAndModify: false, useCreateIndex: true,
+})
+  .then(() => {
+  console.log('DB connection established');
+}).catch(() => {
+  console.error('Failed to establish DB connection');
+});
+autoIncrement.initialize();
+
 const {apiRouter} = require("./routes/api.route");
 
 const staticPath = path.join(__dirname + '../../../dist/AHtNgApp');
@@ -23,21 +36,13 @@ app.get('*', (req, res) => {
 app.use((err, req, res, next) => {
   const {message} = err;
 
-  console.log(message);
+  console.log(req.url, message, err);
 
   if (err instanceof HttpError) {
     res.status(err.statusCode).json({message});
   } else {
     res.status(500).json({message});
   }
-});
-
-mongoose.connect(dbConnectionString, {
-  useNewUrlParser: true, useUnifiedTopology: true,
-}).then(() => {
-  console.log('DB connection established');
-}).catch(() => {
-  console.error('Failed to establish DB connection');
 });
 
 module.exports = app;
