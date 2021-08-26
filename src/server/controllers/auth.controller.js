@@ -5,7 +5,6 @@ const {
 const {
   ArgumentError,
   BadRequestError,
-  InternalServerError,
 } = require('../models/errors');
 
 const registerUser = async (req, res) => {

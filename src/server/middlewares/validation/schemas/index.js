@@ -49,6 +49,21 @@ const signIn = Joi.object({
   password: Joi.string().required().min(8).max(16),
 }).options({ allowUnknown: true });
 
+const editProfile = Joi.object({
+  email: Joi.string().email().required(),
+  username: Joi.string().alphanum().required().min(6).max(16),
+  age: Joi.number().integer().min(14).allow(null).optional(),
+}).options({ allowUnknown: true });
+
+editProfile.transform = {
+  age: (age) => {
+    if (age === null || age === undefined) {
+      return age;
+    }
+    return Number(age);
+  },
+}
+
 const forgotPassword = Joi.object({
   email: Joi.string().email().required(),
 }).options({ allowUnknown: true });
@@ -58,6 +73,20 @@ const changePassword = Joi.object({
   newPassword: Joi.string().required(),
 }).options({ allowUnknown: true });
 
+const queryGamesFilter = Joi.object({
+  name: Joi.string().optional().allow(''),
+  maxPrice: Joi.number().optional(),
+  tags: Joi.alternatives(
+    Joi.array().items(Joi.string()),
+    Joi.string(),
+  ).optional(),
+}).options({ allowUnknown: true });
+
+queryGamesFilter.transform = {
+  maxPrice: Number,
+  tags: obj => obj ? (Array.isArray(obj) ? obj : [obj]) : [],
+}
+
 module.exports = {
   queryQueryParam,
   offsetLimit,
@@ -66,4 +95,6 @@ module.exports = {
   forgotPassword,
   changePassword,
   paramId, paramGameId, paramFriendId,
+  queryGamesFilter,
+  editProfile,
 };

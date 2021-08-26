@@ -5,16 +5,21 @@ const {
 
 const getGames = async (req, res) => {
   const {limit, offset, name, maxPrice, tags} = req.query;
-  console.log(JSON.stringify(req.query));
 
-  // TODO: implement query parsing
-  res.json({games: getGamesPage({limit, offset}, {name, maxPrice, tags})});
+  const pagination = {limit, offset};
+
+  const page = await getGamesPage(pagination, {name, maxPrice, tags});
+
+  res.json({
+    ...pagination,
+    ...page,
+  });
 };
 
 const getGame = async (req, res) => {
   const {id} = req.params;
 
-  res.json({game: getGameById(id)});
+  res.json({game: await getGameById(id)});
 };
 
 module.exports = {

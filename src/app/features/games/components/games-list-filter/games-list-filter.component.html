@@ -13,9 +13,8 @@
     <ul class="list-unstyled">
       <li *ngFor="let tag of tagsList">
         <label>
-          <input (change)="tagToggled($event.target)" class="ml-2" type="checkbox" value="{{tag}}">
-          {{capitalizeFirstLetter(tag)}}
-
+          <input (change)="tagToggled($event.target)" class="ml-2" type="checkbox" value="{{tag.name}}">
+          {{capitalizeFirstLetter(tag.name)}}
         </label>
       </li>
     </ul>

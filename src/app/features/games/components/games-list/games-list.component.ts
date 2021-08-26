@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {FeaturedGame, GamesFilter, GamesPage} from "@core/models/games";
 import {Subscription} from "rxjs";
 import {GamesService} from "@/features/games/services/games.service";
@@ -8,7 +8,7 @@ import {GamesService} from "@/features/games/services/games.service";
   templateUrl: './games-list.component.html',
   styleUrls: ['./games-list.component.scss']
 })
-export class GamesListComponent implements OnInit {
+export class GamesListComponent implements OnInit, OnChanges {
   @Input() filter!: GamesFilter;
 
   public pageData: GamesPage = {offset: 0, limit: 0, count: 0, games: []};
@@ -25,13 +25,19 @@ export class GamesListComponent implements OnInit {
     this.reloadList();
   }
 
+  ngOnChanges(): void {
+    this.reloadList();
+  }
+
   reloadList() {
     this.lastSubscription.unsubscribe();
     this.lastSubscription = this.gamesService.getGames$({
       offset: this.offset,
       limit: this.pageSize
     }, this.filter)
-      .subscribe((gamesPage) => this.pageData = gamesPage);
+      .subscribe((gamesPage) => {
+        this.pageData = gamesPage
+      });
   }
 
   private get offset() {

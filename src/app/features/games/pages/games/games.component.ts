@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {GamesFilter} from "@core/models/games";
+import {FilterComponentData, GamesFilter} from "@core/models/games";
 
 @Component({
   selector: 'app-games',
@@ -17,6 +17,16 @@ export class GamesComponent implements OnInit {
   }
 
   queryChanged(query: string) {
-    this.filter.name = query;
+    this.filter = {
+      ...this.filter,
+      name: query,
+    }
+  }
+
+  filterChanged(filter: FilterComponentData) {
+    this.filter = {
+      ...this.filter,
+      ...filter,
+    };
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Observable, of} from "rxjs";
-import {Friend, FriendsPage, FriendStatus} from "@/features/friends/models";
+import {Observable} from "rxjs";
+import {FriendsPage, FriendStatus} from "@/features/friends/models";
 import {Pagination} from "@core/models/pagination";
 import {apiBaseUrl} from "@core/constants/api";
 import {HttpClient} from "@angular/common/http";
@@ -43,7 +43,6 @@ export class FriendsService {
       .pipe(map((res: any) => res.status));
   }
 
-  // TODO: implement normally
   public getFriends$(pagination: Pagination): Observable<FriendsPage> {
     const id = this.user?.id;
     return this.http.get(this.apiUrl + `/${id}/friends`, {params: {...pagination}})

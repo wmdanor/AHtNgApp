@@ -3,7 +3,7 @@ const {
 } = require('../services/tags.service');
 
 const getTags = async (req, res) => {
-  res.json({tags: getAllTags()});
+  res.json({tags: await getAllTags()});
 }
 
 module.exports = {

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import {UserComponent} from "@/features/users/pages/user/user.component";
 import {EditComponent} from "@/features/users/pages/edit/edit.component";
 import {UserResolver} from "@/features/users/resolvers/user.resolver";
+import {AuthGuard} from "@core/guards/auth.guard";
 
 const routes: Routes = [
   {
@@ -18,7 +19,8 @@ const routes: Routes = [
     component: EditComponent,
     resolve: {
       user: UserResolver
-    }
+    },
+    canActivate: [AuthGuard]
   },
 ];
 

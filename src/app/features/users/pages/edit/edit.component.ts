@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {User} from "@core/models/user";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {UsersService} from "@core/services/users.service";
+import {LoggedUserService} from "@core/services/logged-user.service";
 
 @Component({
   selector: 'app-edit',
@@ -16,7 +17,9 @@ export class EditComponent implements OnInit {
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly state: LoggedUserService,
+    private readonly router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -55,14 +58,15 @@ export class EditComponent implements OnInit {
     return this.age?.invalid && (this.age?.dirty || this.age?.touched);
   }
 
-  // TODO finish method
   public submit(): void {
     if (this.editForm?.valid) {
       const data = this.editForm?.value;
-
-      const result = this.usersService.updateUser$(data);
-
-      // ...
+      this.usersService.updateUser$(data).subscribe(() => {
+        this.state.updateLoggedUser();
+        this.router.navigate([
+          `/users/${this.user?.id}`
+        ]).then();
+      });
     }
   }
 }

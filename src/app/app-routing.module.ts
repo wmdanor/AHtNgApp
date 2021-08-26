@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {NotFoundComponent} from "@core/components/not-found/not-found.component";
+import {AuthGuard} from "@core/guards/auth.guard";
 
 const routes: Routes = [
   {
@@ -18,11 +19,13 @@ const routes: Routes = [
   },
   {
     path: 'library',
-    loadChildren: () => import('./features/library/library.module').then(m => m.LibraryModule)
+    loadChildren: () => import('./features/library/library.module').then(m => m.LibraryModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'friends',
-    loadChildren: () => import('./features/friends/friends.module').then(m => m.FriendsModule)
+    loadChildren: () => import('./features/friends/friends.module').then(m => m.FriendsModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'users',

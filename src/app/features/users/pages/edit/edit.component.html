@@ -1,6 +1,6 @@
 <div class="container d-flex flex-column align-items-center form-wrapper shadow">
   <h2>Profile</h2>
-  <form *ngIf="editForm" [formGroup]="editForm" class="d-flex flex-column form">
+  <form *ngIf="editForm" [formGroup]="editForm" (submit)="submit()" class="d-flex flex-column form">
     <label>
       <span>Username:</span>
       <input

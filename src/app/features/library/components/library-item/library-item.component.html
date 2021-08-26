@@ -6,8 +6,11 @@
     <p>{{description}}</p>
 
     <div class="d-flex ">
-      <a class="mt-2 mr-2 w-50 btn btn-primary" href="#">Download</a>
-      <a class="mt-2 w-50 btn btn-secondary" href="#">Share</a>
+      <button type="button" class="mt-2 mr-2 w-50 btn btn-primary" (click)="onDownload()">Download</button>
+      <button
+        type="button" [disabled]="shareDisabled" class="mt-2 w-50 btn btn-secondary" (click)="onShare()">
+        {{shareText}}
+      </button>
     </div>
   </div>
 </div>

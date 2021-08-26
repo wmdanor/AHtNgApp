@@ -7,7 +7,7 @@ const {
   signUp,
   signIn,
   forgotPassword,
-  changePassword, paramId, paramGameId, paramFriendId, queryQueryParam,
+  changePassword, paramId, paramGameId, paramFriendId, queryQueryParam, queryGamesFilter, editProfile,
 } = require('./schemas');
 
 module.exports = {
@@ -20,4 +20,6 @@ module.exports = {
   paramIdValidator: createParamsValidator(paramId),
   paramGameIdValidator: createParamsValidator(paramGameId),
   paramFriendIdValidator: createParamsValidator(paramFriendId),
+  queryGamesFilterValidator: createQueryValidator(queryGamesFilter),
+  editProfileValidator: createBodyValidator(editProfile),
 };

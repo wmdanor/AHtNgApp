@@ -3,6 +3,7 @@ const {asyncWrapper} = require('../utils/routerUtils');
 const {
   getUsers,
   getCurrentUser,
+  editCurrentUser,
   deleteCurrentUser,
   changeCurrentUserPassword,
   getUser,
@@ -16,7 +17,7 @@ const {
   friendsSetStatus,
 } = require('../controllers/user.controller');
 const {changePasswordValidator, offsetLimitQueryValidator, paramIdValidator, paramGameIdValidator,
-  paramFriendIdValidator, queryQueryParamValidator
+  paramFriendIdValidator, queryQueryParamValidator, editProfileValidator
 } = require('../middlewares/validation');
 const {authMiddleware} = require("../middlewares/auth.middleware");
 
@@ -37,6 +38,11 @@ usersRouter.patch(
 );
 
 usersRouter.get('/:id', paramIdValidator, asyncWrapper(getUser));
+usersRouter.put(
+  '/:id', authMiddleware,
+  paramIdValidator, editProfileValidator,
+  asyncWrapper(editCurrentUser),
+);
 
 usersRouter.get('/:id/games', paramIdValidator, asyncWrapper(libraryGetGames));
 usersRouter.post(

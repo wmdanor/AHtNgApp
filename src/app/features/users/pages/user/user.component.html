@@ -8,8 +8,10 @@
         <span>{{user.username}}</span>
         <span>{{user.email}}</span>
         <span>{{user.age}}</span>
-<!--    TODO: make *ngIf check if it is logged user page    -->
-        <a *ngIf="true" routerLink="./edit" class="btn btn-primary">Edit profile</a>
+        <div class="d-flex flex-column mt-2">
+          <a *ngIf="user.id === loggedUser?.id" routerLink="./edit" class="btn btn-primary mb-2">Edit profile</a>
+          <button type="button" (click)="logOut()" class="btn btn-danger">Log out</button>
+        </div>
       </div>
     </div>
   </div>

@@ -21,6 +21,9 @@ const User = new mongoose.Schema({
     required: true,
   },
 
+  age: {
+    type: Number,
+  },
   games: {
     type: [Number],
     default: [],

@@ -39,7 +39,8 @@ export class GamesListItemComponent implements OnInit {
   }
 
   public addToLibrary() {
-    this.gamesService.addToLibrary$(this.game.id);
-    this.gameChange.emit({...this.game, isInLibrary: true});
+    this.gamesService.addToLibrary$(this.game.id).subscribe();
+    this.game.isInLibrary = true;
+    this.gameChange.emit(this.game);
   }
 }

@@ -30,7 +30,6 @@ export class FriendListItemComponent implements OnInit {
         //   ...this.friend,
         //   status,
         // }
-        // if (this.friend.status === status) return;
         this.friendChange.emit({
           ...this.friend,
           status,

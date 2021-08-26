@@ -12,7 +12,7 @@ const Game = new mongoose.Schema({
     unique: true,
   },
   price: {
-    type: String,
+    type: Number,
     required: true,
   },
   description: {
@@ -20,7 +20,7 @@ const Game = new mongoose.Schema({
     default: '',
   },
   tags: {
-    type: [Number],
+    type: [String],
     default: [],
   },
 

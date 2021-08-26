@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {SignInService} from "@/features/sign-in/services/sign-in.service";
 import {LoggedUserService} from "@core/services/logged-user.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-sign-in',
@@ -14,6 +15,7 @@ export class SignInComponent implements OnInit {
   public errorMessage: string = '';
 
   constructor(
+    private readonly router: Router,
     private readonly signInService: SignInService,
     private readonly state: LoggedUserService
   ) { }
@@ -53,12 +55,14 @@ export class SignInComponent implements OnInit {
 
   public submit(): void {
     if (this.signInForm?.valid) {
+      this.errorMessage = '';
       const data = this.signInForm?.value;
 
-      this.signInService.signIn$(data).subscribe((response) => {
+      this.signInService.signIn$(data).subscribe(() => {
         this.state.updateLoggedUser();
+        this.router.navigate(['/']).then();
       }, (error => {
-        console.log(error);
+        this.errorMessage = error.error.message;
       }));
     }
   }

@@ -40,6 +40,6 @@
       </span>
     </label>
     <button type="submit" class="btn btn-primary mt-1" [disabled]="signInForm.invalid">Sign in</button>
-<!--    <div *ngIf="tr"-->
+    <div *ngIf="errorMessage"><small class="text-danger small">{{errorMessage}}</small></div>
   </form>
 </div>

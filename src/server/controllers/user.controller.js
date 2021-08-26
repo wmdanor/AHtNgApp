@@ -1,4 +1,4 @@
-const {ArgumentError, BadRequestError} = require('../models/errors');
+const {ArgumentError, BadRequestError, UnauthorizedError} = require('../models/errors');
 const {
   getUserById,
   deleteUserById,
@@ -10,7 +10,7 @@ const {
   friendsGetSentRequestsPage,
   friendsGetRecRequestsPage,
   friendsGetFriendshipStatus,
-  friendsSetFriendshipStatus, getUsersPage,
+  friendsSetFriendshipStatus, getUsersPage, updateUser,
 } = require('../services/users.service');
 const jwt = require("jsonwebtoken");
 const {jwtSecret} = require("../config/default");
@@ -48,6 +48,7 @@ const getCurrentUser = async (req, res) => {
   const {
     email,
     username,
+    age,
     createdDate,
   } = user;
 
@@ -56,9 +57,27 @@ const getCurrentUser = async (req, res) => {
       id: userId,
       email,
       username,
+      age,
       createdDate,
     },
   });
+};
+
+const editCurrentUser = async (req, res) => {
+  const {userId} = req.user;
+  const {id} = req.params;
+  if (userId !== id) {
+    throw new UnauthorizedError('You have no rights to perform this action');
+  }
+  const {email, username, age} = req.body;
+
+  const user = await updateUser(userId, {email, username, age});
+
+  if (!user) {
+    throw new BadRequestError('User with such id is not found.');
+  }
+
+  res.json({user});
 };
 
 const deleteCurrentUser = async (req, res) => {
@@ -96,8 +115,9 @@ const getUser = async (req, res) => {
 
   const {
     email,
-    createdDate,
     username,
+    age,
+    createdDate,
   } = user;
 
   res.json({
@@ -105,6 +125,7 @@ const getUser = async (req, res) => {
       id,
       email,
       username,
+      age,
       createdDate,
     },
   });
@@ -126,7 +147,7 @@ const libraryAddGame = async (req, res) => {
   }
   const gameId = req.params.id;
 
-  const game = await libraryPostGame(id, gameId);
+  await libraryPostGame(id, gameId);
 
   res.json({gameId});
 };
@@ -216,6 +237,7 @@ const friendsSetStatus = async (req, res) => {
 module.exports = {
   getUsers,
   getCurrentUser,
+  editCurrentUser,
   deleteCurrentUser,
   changeCurrentUserPassword,
   getUser,

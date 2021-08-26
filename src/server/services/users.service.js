@@ -11,7 +11,7 @@ const getUsersPage = async ({offset, limit}, {query, ignoreId}) => {
   const match = {};
 
   if (query) {
-    // match.username = query;
+    match.username = {$regex: query, $options: 'i'};
   }
 
   if (ignoreId) {
@@ -39,6 +39,10 @@ const getUsersPage = async ({offset, limit}, {query, ignoreId}) => {
     }
   ]);
 
+  if (!result[0]) {
+    result[0] = {count: 0, users: []};
+  }
+
   return result[0];
 }
 
@@ -51,6 +55,11 @@ const addUser = async ({email, username, password}) => {
 
   await user.save();
 };
+
+const updateUser = async (id, {email, username, age}) =>
+  User.findOneAndUpdate({id}, {
+    $set: {email, username, age}
+  });
 
 const getUserById = async (userId) => await User.findOne({id: userId});
 
@@ -262,6 +271,7 @@ const friendsSetFriendshipStatus = async (userId, friendId, status) => {
 module.exports = {
   getUsersPage,
   addUser,
+  updateUser,
   getUserById,
   deleteUserById,
   updateUserPassword,

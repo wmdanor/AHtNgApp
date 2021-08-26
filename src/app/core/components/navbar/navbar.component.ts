@@ -16,19 +16,9 @@ export class NavbarComponent implements OnInit {
     private readonly state: LoggedUserService,
   ) { }
 
-  // TODO: get logged user id normally
   ngOnInit(): void {
     this.state.getLoggedUser$().subscribe((user) => {
       this.loggedUser = user;
     });
   }
-
-  public toggleLoginState(event: any) {
-    if (event.target.checked) {
-      this.loggedUser = {id: 1, age: 0, email: '', username: ''};
-    } else {
-      this.loggedUser = undefined;
-    }
-  }
-
 }

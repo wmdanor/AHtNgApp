@@ -1,4 +1,4 @@
-<nav class="navbar-container">
+<nav class="navbar-container py-2">
   <ul ngbNav [activeId]="route.fragment | async" class="container">
     <li ngbNavItem="games">
       <a ngbNavLink routerLink="/games">Games</a>
@@ -20,8 +20,4 @@
       <a ngbNavLink routerLink="/sign-in">Sign in</a>
     </li>
   </ul>
-  <label>
-    Is logged in:
-    <input type="checkbox" checked (change)="toggleLoginState($event)">
-  </label>
 </nav>
