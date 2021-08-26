@@ -1,4 +1,8 @@
-<form (submit)="search($event)" class="w-100 h-100 d-flex">
-  <input class="form-control mr-2" [formControl]="input" type="text" [placeholder]="placeholder">
-  <button type="submit" class="btn btn-primary">Search</button>
-</form>
+<!--<form (submit)="search($event)" class="w-100 h-100 d-flex">-->
+<!--  <input class="form-control mr-2" [formControl]="input" type="text" [placeholder]="placeholder">-->
+<!--  <button type="submit" class="btn btn-primary">Search</button>-->
+<!--</form>-->
+
+<div class="w-100 h-100 d-flex">
+  <input class="w-100 form-control" type="text" [placeholder]="placeholder" [formControl]="input">
+</div>

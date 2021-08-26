@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {SignInService} from "@/features/sign-in/services/sign-in.service";
+import {LoggedUserService} from "@core/services/logged-user.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-sign-in',
@@ -10,9 +12,12 @@ import {SignInService} from "@/features/sign-in/services/sign-in.service";
 })
 export class SignInComponent implements OnInit {
   public signInForm: FormGroup | undefined;
+  public errorMessage: string = '';
 
   constructor(
-    private readonly signInService: SignInService
+    private readonly router: Router,
+    private readonly signInService: SignInService,
+    private readonly state: LoggedUserService
   ) { }
 
   ngOnInit(): void {
@@ -48,14 +53,17 @@ export class SignInComponent implements OnInit {
     return this.password?.invalid && (this.password?.dirty || this.password?.touched);
   }
 
-  // TODO finish method
   public submit(): void {
     if (this.signInForm?.valid) {
+      this.errorMessage = '';
       const data = this.signInForm?.value;
 
-      const result = this.signInService.signIn$(data);
-
-      // ...
+      this.signInService.signIn$(data).subscribe(() => {
+        this.state.updateLoggedUser();
+        this.router.navigate(['/']).then();
+      }, (error => {
+        this.errorMessage = error.error.message;
+      }));
     }
   }
 }

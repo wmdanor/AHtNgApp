@@ -13,7 +13,7 @@
         <app-games-list [filter]="filter"></app-games-list>
       </div>
       <div class="col-3 border-left">
-        <app-games-list-filter></app-games-list-filter>
+        <app-games-list-filter (filterOutput)="filterChanged($event)"></app-games-list-filter>
       </div>
     </div>
   </div>

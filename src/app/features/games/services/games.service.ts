@@ -1,51 +1,49 @@
 import { Injectable } from '@angular/core';
 import {FeaturedGame, GamesFilter, GamesPage} from "@core/models/games";
 import {apiBaseUrl} from "@core/constants/api";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {Pagination} from "@core/models/pagination";
+import {HttpClient} from "@angular/common/http";
+import {map} from "rxjs/operators";
+import {LoggedUserService} from "@core/services/logged-user.service";
+import {User} from "@core/models/user";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GamesService {
   private readonly apiUrl = apiBaseUrl + 'games';
+  private user: User | undefined;
 
-  constructor() { }
+  constructor(
+    private readonly http: HttpClient,
+    private readonly state: LoggedUserService
+  ) {
+    this.state.getLoggedUser$().subscribe((user) => this.user = user);
+  }
 
-  // TODO: add filters
   public getGames$(pagination: Pagination, filter: GamesFilter): Observable<GamesPage> {
-    return of({
-      ...pagination,
-      count: 1,
-      games: [
-        {
-          id: 1,
-          name: 'game1',
-          price: 100,
-          description: 'description',
-          tags: ['tag1', 'tag2'],
-          isInLibrary: false
-        }
-      ]
-    });
+    return this.http.get<GamesPage>(this.apiUrl, {params: {...pagination, ...filter}});
+  }
+
+  public isInLibrary$(id: number): Observable<boolean> {
+    const userId = this.user?.id;
+    return this.http.get(apiBaseUrl + `users/${userId}/games/${id}/check`)
+      .pipe((res: any) => res.isInLibrary);
   }
 
   public getGame$(id: number): Observable<FeaturedGame | undefined> {
-    return of({
-      id: 1,
-      name: 'game1',
-      price: 100,
-      description: '',
-      tags: ['tag1', 'tag2'],
-      isInLibrary: false
-    });
+    return this.http.get(this.apiUrl + `/${id}`)
+      .pipe(map((res: any) => res.game));
   }
 
   public getTags$(): Observable<string[]> {
-    return of(['tag1', 'tag2']);
+    return this.http.get(this.apiUrl + '/tags')
+      .pipe(map((res: any) => res.tags));
   }
 
   public addToLibrary$(id: number): Observable<unknown> {
-    return of();
+    const userId = 1;
+    return this.http.post(apiBaseUrl + `users/${userId}/games/${id}`, null);
   }
 }

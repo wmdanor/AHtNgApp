@@ -18,6 +18,15 @@ export class GamesListItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.gamesService.isInLibrary$(this.game.id).subscribe(
+      (isInLibrary: boolean) => {
+        this.game = {
+          ...this.game,
+          isInLibrary,
+        }
+        this.gameChange.emit(this.game);
+      }
+    )
   }
 
   public get description() {
@@ -30,7 +39,8 @@ export class GamesListItemComponent implements OnInit {
   }
 
   public addToLibrary() {
-    this.gamesService.addToLibrary$(this.game.id);
-    this.gameChange.emit({...this.game, isInLibrary: true});
+    this.gamesService.addToLibrary$(this.game.id).subscribe();
+    this.game.isInLibrary = true;
+    this.gameChange.emit(this.game);
   }
 }

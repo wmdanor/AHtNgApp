@@ -7,7 +7,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { FriendListItemComponent } from './components/friend-list-item/friend-list-item.component';
 import {SharedModule} from "@shared/shared.module";
-
+import {HttpClientModule} from "@angular/common/http";
 
 
 @NgModule({
@@ -18,10 +18,11 @@ import {SharedModule} from "@shared/shared.module";
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
+    SharedModule,
     FriendsRoutingModule,
     NgbModule,
     ReactiveFormsModule,
-    SharedModule
   ]
 })
 export class FriendsModule { }

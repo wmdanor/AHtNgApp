@@ -33,7 +33,7 @@ export class GamesListFilterComponent implements OnInit {
 
   public priceControl = new FormControl(13);
   public priceText: string | undefined;
-  public tagsList: string[] = [];
+  public tagsList: {name: string}[] = [];
   public checkedTags: Set<string> = new Set<string>();
 
   constructor(

@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {NgbNavChangeEvent} from "@ng-bootstrap/ng-bootstrap";
-import {Friend, FriendsPage, FriendStatus} from "@/features/friends/models";
+import {Friend, FriendsPage} from "@/features/friends/models";
 import {Observable, Subscription} from "rxjs";
 import {FriendsService} from "@/features/friends/services/friends.service";
 import {Pagination} from "@core/models/pagination";
@@ -33,7 +33,7 @@ export class FriendsListComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.activeId = 1;
-    this.reloadList(); // TODO: fetch users
+    this.reloadList();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -80,7 +80,9 @@ export class FriendsListComponent implements OnInit, OnChanges {
       offset: this.offset,
       limit: this.pageSize
     }, this.searchQuery)
-      .subscribe((friendsPage) => this.pageData = friendsPage);
+      .subscribe((friendsPage) => {
+        this.pageData = friendsPage;
+      });
   }
 
   private get offset() {

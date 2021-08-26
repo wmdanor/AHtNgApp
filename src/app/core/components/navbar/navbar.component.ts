@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
+import {User} from "@core/models/user";
+import {LoggedUserService} from "@core/services/logged-user.service";
 
 @Component({
   selector: 'app-navbar',
@@ -7,22 +9,16 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  loggedUserId: number = 1;
+  loggedUser: User | undefined;
 
   constructor(
-    public readonly route: ActivatedRoute
+    public readonly route: ActivatedRoute,
+    private readonly state: LoggedUserService,
   ) { }
 
-  // TODO: get logged user id normally
   ngOnInit(): void {
+    this.state.getLoggedUser$().subscribe((user) => {
+      this.loggedUser = user;
+    });
   }
-
-  public toggleLoginState(event: any) {
-    if (event.target.checked) {
-      this.loggedUserId = 1;
-    } else {
-      this.loggedUserId = 0;
-    }
-  }
-
 }
