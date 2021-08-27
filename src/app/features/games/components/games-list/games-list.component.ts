@@ -26,6 +26,7 @@ export class GamesListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
+    this.page = 1;
     this.reloadList();
   }
 
