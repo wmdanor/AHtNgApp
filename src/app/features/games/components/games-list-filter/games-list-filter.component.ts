@@ -33,7 +33,7 @@ export class GamesListFilterComponent implements OnInit {
 
   public priceControl = new FormControl(13);
   public priceText: string | undefined;
-  public tagsList: {name: string}[] = [];
+  public tagsList: string[] = [];
   public checkedTags: Set<string> = new Set<string>();
 
   constructor(
@@ -43,7 +43,8 @@ export class GamesListFilterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.tagsList = this.activatedRoute.snapshot.data.tags;
+    this.tagsList = this.activatedRoute.snapshot.data.tags
+      .map((tag: {name: string}) => tag.name).sort();
   }
 
   priceChange() {

@@ -10,11 +10,11 @@
     <span class="h6 w-100">
       Filter by tag
     </span>
-    <ul class="list-unstyled">
+    <ul class="list-unstyled d-flex flex-column overflow-auto mh-80 fancy-scroll">
       <li *ngFor="let tag of tagsList">
         <label>
-          <input (change)="tagToggled($event.target)" class="ml-2" type="checkbox" value="{{tag.name}}">
-          {{capitalizeFirstLetter(tag.name)}}
+          <input (change)="tagToggled($event.target)" class="ml-2" type="checkbox" value="{{tag}}">
+          {{capitalizeFirstLetter(tag)}}
         </label>
       </li>
     </ul>
