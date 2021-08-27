@@ -15,8 +15,6 @@ const getGamesPage = async ({limit, offset}, {name, maxPrice, tags}) => {
     match.tags = { $in: tags };
   }
 
-  console.log(match)
-
   const result = await Game.aggregate([
     { $match: {...match} },
     {

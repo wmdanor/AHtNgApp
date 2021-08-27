@@ -28,8 +28,9 @@ export class GamesService {
 
   public isInLibrary$(id: number): Observable<boolean> {
     const userId = this.user?.id;
-    return this.http.get(apiBaseUrl + `users/${userId}/games/${id}/check`)
-      .pipe((res: any) => res.isInLibrary);
+    const url = apiBaseUrl + `users/${userId}/games/${id}/check`;
+    return this.http.get(url)
+      .pipe(map((res: any) => res.isInLibrary));
   }
 
   public getGame$(id: number): Observable<FeaturedGame | undefined> {
@@ -43,7 +44,8 @@ export class GamesService {
   }
 
   public addToLibrary$(id: number): Observable<unknown> {
-    const userId = 1;
-    return this.http.post(apiBaseUrl + `users/${userId}/games/${id}`, null);
+    const userId = this.user?.id;
+    return this.http.post(apiBaseUrl + `users/${userId}/games/${id}`, null)
+      .pipe(map((res: any) => res.isInLibrary));
   }
 }

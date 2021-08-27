@@ -4,31 +4,25 @@ import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import { ContainerComponent } from './components/container/container.component';
-
-const PUBLIC_COMPONENTS: any = [];
-const PUBLIC_DIRECTIVES: any = [];
-const PUBLIC_PIPES: any = [];
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   declarations: [
-    ...PUBLIC_COMPONENTS,
-    ...PUBLIC_DIRECTIVES,
-    ...PUBLIC_PIPES,
     ConfirmModalComponent,
     SearchBarComponent,
     ContainerComponent,
   ],
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule,
   ],
   exports: [
     CommonModule,
-    ...PUBLIC_COMPONENTS,
-    ...PUBLIC_DIRECTIVES,
-    ...PUBLIC_PIPES,
     SearchBarComponent,
     ContainerComponent,
+    ConfirmModalComponent,
   ],
+  providers: []
 })
 export class SharedModule { }

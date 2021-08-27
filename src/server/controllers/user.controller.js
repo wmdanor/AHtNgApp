@@ -140,12 +140,11 @@ const libraryGetGames = async (req, res) => {
 };
 
 const libraryAddGame = async (req, res) => {
-  const {id} = req.params;
+  const {id, gameId} = req.params;
   const {userId} = req.user;
   if (id !== userId) {
     throw new BadRequestError('You have no permission for this action');
   }
-  const gameId = req.params.id;
 
   await libraryPostGame(id, gameId);
 
@@ -153,9 +152,9 @@ const libraryAddGame = async (req, res) => {
 };
 
 const libraryCheckGame = async (req, res) => {
-  const {id} = req.params;
+  const {id, gameId} = req.params;
 
-  const isInLibrary = await libraryIsInLibrary(id, req.params.id);
+  const isInLibrary = await libraryIsInLibrary(id, gameId);
 
   res.json({isInLibrary});
 };

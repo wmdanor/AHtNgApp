@@ -118,10 +118,10 @@ const libraryPostGame = async (userId, gameId) => {
     return null;
   }
 
-  if (!user.games.find(v => v === gameId)) {
+  if (!user.games.includes(gameId)) {
     user.games.push(gameId);
     await User.findOneAndUpdate({id: userId}, {$set: {
-        games: user.games.push(),
+        games: user.games,
       }});
   }
 }
@@ -133,7 +133,7 @@ const libraryIsInLibrary = async (userId, gameId) => {
     return;
   }
 
-  return Boolean(user.games.find(v => v === gameId));
+  return user.games.includes(gameId);
 }
 
 const parseFriendsPage = async (page, userId) => {
