@@ -1,6 +1,6 @@
 <ng-container *ngIf="pageData.games.length else list_empty">
   <div class="row">
-    <div class="col-4" *ngFor="let game of pageData.games">
+    <div class="col-4 mb-3" *ngFor="let game of pageData.games">
       <app-games-list-item [game]="game" (gameChange)="addToLibrary($event)"></app-games-list-item>
     </div>
   </div>
