@@ -1,29 +1,39 @@
-import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter, OnDestroy} from '@angular/core';
 import {FeaturedGame} from "@core/models/games";
 import {GamesService} from "@/features/games/services/games.service";
+import {Subscription} from "rxjs";
+import {unsubscribeArray} from "@core/utils/unsubscribeArray";
 
 @Component({
   selector: 'app-games-list-item',
   templateUrl: './games-list-item.component.html',
   styleUrls: ['./games-list-item.component.scss']
 })
-export class GamesListItemComponent implements OnInit {
+export class GamesListItemComponent implements OnInit, OnDestroy {
   @Input() game!: FeaturedGame;
   @Output() gameChange = new EventEmitter<FeaturedGame>();
 
   private maxDescriptionLength = 100;
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly gamesService: GamesService
   ) { }
 
   ngOnInit(): void {
-    this.gamesService.isInLibrary$(this.game.id).subscribe(
+    const subscription = this.gamesService.isInLibrary$(this.game.id).subscribe(
       (isInLibrary: boolean) => {
         this.game.isInLibrary = isInLibrary;
         this.gameChange.emit(this.game);
       }
-    )
+    );
+
+    this.subscriptions.push(subscription);
+  }
+
+  ngOnDestroy(): void {
+    unsubscribeArray(this.subscriptions);
   }
 
   public get price() {

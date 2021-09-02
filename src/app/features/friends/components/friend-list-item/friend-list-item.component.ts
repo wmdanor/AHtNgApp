@@ -1,19 +1,23 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Friend, FriendStatus} from "@/features/friends/models";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ConfirmModalComponent} from "@shared/components/confirm-modal/confirm-modal.component";
 import {FriendsService} from "@/features/friends/services/friends.service";
+import {Subscription} from "rxjs";
+import {unsubscribeArray} from "@core/utils/unsubscribeArray";
 
 @Component({
   selector: 'app-friend-list-item',
   templateUrl: './friend-list-item.component.html',
   styleUrls: ['./friend-list-item.component.scss']
 })
-export class FriendListItemComponent implements OnInit {
+export class FriendListItemComponent implements OnInit, OnDestroy {
   @Input() friend!: Friend;
   @Output() friendChange = new EventEmitter<Friend>();
 
   public friendStatus = FriendStatus;
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly modalService: NgbModal,
@@ -24,7 +28,7 @@ export class FriendListItemComponent implements OnInit {
     if (this.friend.status) {
       return;
     }
-    this.friendsService.getFriendshipStatus$(this.friend.user.id).subscribe(
+    const subscription = this.friendsService.getFriendshipStatus$(this.friend.user.id).subscribe(
       (status) => {
         this.friendChange.emit({
           ...this.friend,
@@ -32,6 +36,12 @@ export class FriendListItemComponent implements OnInit {
         });
       }
     )
+
+    this.subscriptions.push(subscription);
+  }
+
+  ngOnDestroy(): void {
+    unsubscribeArray(this.subscriptions);
   }
 
   sendRequest(): void {

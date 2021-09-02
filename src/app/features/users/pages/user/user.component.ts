@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {User} from "@core/models/user";
 import {ActivatedRoute, Router} from "@angular/router";
 import {LoggedUserService} from "@core/services/logged-user.service";
+import {Subscription} from "rxjs";
+import {unsubscribeArray} from "@core/utils/unsubscribeArray";
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss']
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
   public user: User | undefined;
   public loggedUser: User | undefined;
+
+  private subscriptions: Subscription[] = []
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -20,7 +24,12 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.activatedRoute.snapshot.data.user;
-    this.state.getLoggedUser$().subscribe((user) => this.loggedUser = user);
+    const subscription = this.state.getLoggedUser$().subscribe((user) => this.loggedUser = user);
+    this.subscriptions.push(subscription);
+  }
+
+  ngOnDestroy(): void {
+    unsubscribeArray(this.subscriptions);
   }
 
   public logOut() {

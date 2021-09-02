@@ -17,6 +17,7 @@ export class NavbarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // No unsub because navbar only will be destroyed with the whole app
     this.state.getLoggedUser$().subscribe((user) => {
       this.loggedUser = user;
     });
