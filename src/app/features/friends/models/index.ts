@@ -1,5 +1,6 @@
 import {User} from "@core/models/user";
-import {PaginatedResult} from "@core/models/pagination";
+import {PaginatedResult, Pagination} from "@core/models/pagination";
+import {Observable} from "rxjs";
 
 export enum FriendStatus {
   Friends = 'FRIENDS',
@@ -16,3 +17,10 @@ export interface Friend {
 export interface FriendsPage extends PaginatedResult {
   friends: Friend[];
 }
+
+export interface FriendsPageResponse extends PaginatedResult {
+  users: User[];
+}
+
+export type UsersGetter = ((pagination: Pagination) => Observable<FriendsPage>) |
+  ((pagination: Pagination, query: string) => Observable<FriendsPage>);

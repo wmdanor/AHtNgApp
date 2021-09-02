@@ -1,10 +1,8 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
 import {NgbNavChangeEvent} from "@ng-bootstrap/ng-bootstrap";
-import {Friend, FriendsPage} from "@/features/friends/models";
-import {Observable, Subscription} from "rxjs";
+import {Friend, FriendsPage, UsersGetter} from "@/features/friends/models";
+import {Subscription} from "rxjs";
 import {FriendsService} from "@/features/friends/services/friends.service";
-import {Pagination} from "@core/models/pagination";
 
 @Component({
   selector: 'app-friends-list',
@@ -20,15 +18,22 @@ export class FriendsListComponent implements OnInit, OnChanges {
   public pageData: FriendsPage = {offset: 0, limit: 0, count: 0, friends: []};
   private lastSubscription: Subscription = new Subscription();
 
-  private currentUsersGetter:
-    ((pagination: Pagination) => Observable<FriendsPage>) |
-    ((pagination: Pagination, query: string) => Observable<FriendsPage>);
+  private currentUsersGetter: UsersGetter;
+
+  private readonly getFriends$: UsersGetter;
+  private readonly getSentRequests$: UsersGetter;
+  private readonly getReceivedRequests$: UsersGetter;
+  private readonly findUsers$: UsersGetter;
 
   constructor(
-    private readonly activatedRoute: ActivatedRoute,
     private readonly friendsService: FriendsService
   ) {
-    this.currentUsersGetter = this.friendsService.getFriends$;
+    this.getFriends$ = this.friendsService.getFriends$.bind(this.friendsService);
+    this.getSentRequests$ = this.friendsService.getSentRequests$.bind(this.friendsService);
+    this.getReceivedRequests$ = this.friendsService.getReceivedRequests$.bind(this.friendsService);
+    this.findUsers$ = this.friendsService.findUsers$.bind(this.friendsService);
+
+    this.currentUsersGetter = this.getFriends$;
   }
 
   ngOnInit(): void {
@@ -59,16 +64,16 @@ export class FriendsListComponent implements OnInit, OnChanges {
     this.page = 1;
     switch (activeId) {
       case 1:
-        this.currentUsersGetter = this.friendsService.getFriends$;
+        this.currentUsersGetter = this.getFriends$;
         break;
       case 2:
-        this.currentUsersGetter = this.friendsService.getSentRequests$;
+        this.currentUsersGetter = this.getSentRequests$;
         break;
       case 3:
-        this.currentUsersGetter = this.friendsService.getReceivedRequests$;
+        this.currentUsersGetter = this.getReceivedRequests$;
         break;
       case 4:
-        this.currentUsersGetter = this.friendsService.findUsers$;
+        this.currentUsersGetter = this.findUsers$;
         break;
     }
     this.reloadList();

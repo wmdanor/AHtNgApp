@@ -26,10 +26,6 @@ export class FriendListItemComponent implements OnInit {
     }
     this.friendsService.getFriendshipStatus$(this.friend.user.id).subscribe(
       (status) => {
-        // this.friend = {
-        //   ...this.friend,
-        //   status,
-        // }
         this.friendChange.emit({
           ...this.friend,
           status,

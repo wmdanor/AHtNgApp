@@ -28,10 +28,7 @@ export class GamesListItemComponent implements OnInit {
 
   public get price() {
     const {price} = this.game
-    if (price === 0) {
-      return 'Free';
-    }
-    return `${price} USD`;
+    return price === 0 ? 'Free' : `${price} USD`;
   }
 
   public get description() {
