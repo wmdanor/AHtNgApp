@@ -1,3 +1,4 @@
+const {RES_ProfileCreated} = require("./responses");
 const {
   addUser,
   getUserToken,
@@ -16,7 +17,7 @@ const registerUser = async (req, res) => {
 
   await addUser({email, username, password});
 
-  res.json({message: 'Profile created successfully'});
+  res.json({message: RES_ProfileCreated});
 };
 
 const loginUser = async (req, res) => {
