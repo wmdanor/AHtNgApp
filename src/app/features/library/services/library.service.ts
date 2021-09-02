@@ -1,23 +1,30 @@
-import { Injectable } from '@angular/core';
-import {Observable, of} from "rxjs";
+import {Injectable, OnDestroy} from '@angular/core';
+import {Observable, Subscription} from "rxjs";
 import {Game} from "@core/models/games";
 import {apiBaseUrl} from "@core/constants/api";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {User} from "@core/models/user";
 import {LoggedUserService} from "@core/services/logged-user.service";
+import {unsubscribeArray} from "@core/utils/unsubscribeArray";
 
 @Injectable({
   providedIn: 'root'
 })
-export class LibraryService {
+export class LibraryService implements OnDestroy {
   private user: User | undefined;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly http: HttpClient,
     private readonly state: LoggedUserService,
   ) {
-    this.state.getLoggedUser$().subscribe((user) => this.user = user);
+    const subscription = this.state.getLoggedUser$().subscribe((user) => this.user = user);
+    this.subscriptions.push(subscription)
+  }
+
+  ngOnDestroy(): void {
+    unsubscribeArray(this.subscriptions);
   }
 
   public getGamesInLibrary$(): Observable<Game[]> {

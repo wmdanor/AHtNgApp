@@ -13,6 +13,13 @@ const {
   friendsSetFriendshipStatus, getUsersPage, updateUser,
 } = require('../services/users.service');
 const jwt = require("jsonwebtoken");
+const {
+  RES_PasswordChanged,
+  RES_ProfileDeleted,
+  RES_NoRightsAction,
+  RES_UserIdNotFound,
+
+} = require("./responses");
 const {jwtSecret} = require("../config/default");
 
 const getUsers = async (req, res) => {
@@ -42,7 +49,7 @@ const getCurrentUser = async (req, res) => {
   const user = await getUserById(userId);
 
   if (!user) {
-    throw new BadRequestError('User with such id is not found.');
+    throw new BadRequestError(RES_UserIdNotFound);
   }
 
   const {
@@ -67,14 +74,14 @@ const editCurrentUser = async (req, res) => {
   const {userId} = req.user;
   const {id} = req.params;
   if (userId !== id) {
-    throw new UnauthorizedError('You have no rights to perform this action');
+    throw new UnauthorizedError(RES_NoRightsAction);
   }
   const {email, username, age} = req.body;
 
   const user = await updateUser(userId, {email, username, age});
 
   if (!user) {
-    throw new BadRequestError('User with such id is not found.');
+    throw new BadRequestError(RES_UserIdNotFound);
   }
 
   res.json({user});
@@ -85,7 +92,7 @@ const deleteCurrentUser = async (req, res) => {
 
   await deleteUserById(userId);
 
-  res.json({message: 'Profile deleted successfully'});
+  res.json({message: RES_ProfileDeleted});
 };
 
 const changeCurrentUserPassword = async (req, res) => {
@@ -94,7 +101,7 @@ const changeCurrentUserPassword = async (req, res) => {
   try {
     await updateUserPassword(userId, req.body);
 
-    res.json({message: 'Password changed successfully'});
+    res.json({message: RES_PasswordChanged});
   } catch (err) {
     if (err instanceof ArgumentError) {
       throw new BadRequestError(err.message);
@@ -110,7 +117,7 @@ const getUser = async (req, res) => {
   const user = await getUserById(id);
 
   if (!user) {
-    throw new BadRequestError('User with such id is not found.');
+    throw new BadRequestError(RES_UserIdNotFound);
   }
 
   const {
@@ -143,7 +150,7 @@ const libraryAddGame = async (req, res) => {
   const {id, gameId} = req.params;
   const {userId} = req.user;
   if (id !== userId) {
-    throw new BadRequestError('You have no permission for this action');
+    throw new BadRequestError(RES_NoRightsAction);
   }
 
   await libraryPostGame(id, gameId);
@@ -177,7 +184,7 @@ const friendsGetSent = async (req, res) => {
   const {id} = req.params;
   const {userId} = req.user;
   if (id !== userId) {
-    throw new BadRequestError('You have no permission for this action');
+    throw new BadRequestError(RES_NoRightsAction);
   }
   const {limit, offset} = req.query;
 
@@ -195,7 +202,7 @@ const friendsGetReceived = async (req, res) => {
   const {id} = req.params;
   const {userId} = req.user;
   if (id !== userId) {
-    throw new BadRequestError('You have no permission for this action');
+    throw new BadRequestError(RES_NoRightsAction);
   }
   const {limit, offset} = req.query;
 
@@ -213,7 +220,7 @@ const friendsCheckStatus = async (req, res) => {
   const {id, friendId} = req.params;
   const {userId} = req.user;
   if (id !== userId) {
-    throw new BadRequestError('You have no permission for this action');
+    throw new BadRequestError(RES_NoRightsAction);
   }
 
   const status = await friendsGetFriendshipStatus(id, friendId);
@@ -225,7 +232,7 @@ const friendsSetStatus = async (req, res) => {
   const {id, friendId} = req.params;
   const {userId} = req.user;
   if (id !== userId) {
-    throw new BadRequestError('You have no permission for this action');
+    throw new BadRequestError(RES_NoRightsAction);
   }
 
   const status = await friendsSetFriendshipStatus(id, friendId, req.body.status);

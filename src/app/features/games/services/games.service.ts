@@ -1,25 +1,33 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {FeaturedGame, GamesFilter, GamesPage} from "@core/models/games";
 import {apiBaseUrl} from "@core/constants/api";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {Pagination} from "@core/models/pagination";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {LoggedUserService} from "@core/services/logged-user.service";
 import {User} from "@core/models/user";
+import {unsubscribeArray} from "@core/utils/unsubscribeArray";
 
 @Injectable({
   providedIn: 'root'
 })
-export class GamesService {
+export class GamesService implements OnDestroy {
   private readonly apiUrl = apiBaseUrl + 'games';
   private user: User | undefined;
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly http: HttpClient,
     private readonly state: LoggedUserService
   ) {
-    this.state.getLoggedUser$().subscribe((user) => this.user = user);
+    const subscription = this.state.getLoggedUser$().subscribe((user) => this.user = user);
+    this.subscriptions.push(subscription)
+  }
+
+  ngOnDestroy(): void {
+    unsubscribeArray(this.subscriptions);
   }
 
   public getGames$(pagination: Pagination, filter: GamesFilter): Observable<GamesPage> {

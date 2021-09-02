@@ -37,8 +37,6 @@ async function pushData(data) {
   for (const row of data) {
     const {game, tags} = parseGame(row);
 
-    // console.log(game, tags);
-    // return;
     try {
       await game.save();
     } catch { }

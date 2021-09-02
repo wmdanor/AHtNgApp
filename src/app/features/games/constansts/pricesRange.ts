@@ -1,0 +1,16 @@
+export const pricesRangeMap = new Map<number, {text: string, value: number}>([
+  [0, {text: 'Free', value: 0}],
+  [1, {text: '5$', value: 5}],
+  [2, {text: '10$', value: 10}],
+  [3, {text: '15$', value: 15}],
+  [4, {text: '20$', value: 20}],
+  [5, {text: '25$', value: 25}],
+  [6, {text: '30$', value: 30}],
+  [7, {text: '35$', value: 35}],
+  [8, {text: '40$', value: 40}],
+  [9, {text: '45$', value: 45}],
+  [10, {text: '50$', value: 50}],
+  [11, {text: '55$', value: 55}],
+  [12, {text: '60$', value: 60}],
+  [13, {text: 'Any price', value: -1}],
+])
